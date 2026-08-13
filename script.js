@@ -1,4 +1,4 @@
-const MANGA_FOLDER = "manga";
+const MANGA_FOLDER = "manga/solo leveling";
 
 const worksContainer = document.getElementById("works");
 const emptyMessage = document.getElementById("empty");
