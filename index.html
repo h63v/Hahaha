@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MangaX - مكتبة المانجا</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="header">
+    <div class="logo">
+        <span>Manga</span>X
+    </div>
+
+    <nav>
+        <a href="#home">الرئيسية</a>
+        <a href="#manga">المانجا</a>
+        <a href="#latest">آخر التحديثات</a>
+    </nav>
+
+    <button class="theme-btn" id="themeBtn">☀</button>
+</header>
+
+
+<main>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <span class="badge">MANGA LIBRARY</span>
+
+            <h1>
+                عالمك الخاص<br>
+                <span>للقراءة</span>
+            </h1>
+
+            <p>
+                اكتشف آلاف القصص والمانجا، وتابع أحدث الفصول
+                بتصميم سريع ومريح.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="#manga" class="primary-btn">استكشف المانجا</a>
+                <a href="#latest" class="secondary-btn">آخر الفصول</a>
+            </div>
+        </div>
+
+        <div class="hero-art">
+            <div class="circle"></div>
+            <div class="hero-card">
+                <div class="card-cover"></div>
+                <div>
+                    <strong>Solo Leveling</strong>
+                    <small>Chapter 200</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Search -->
+    <section class="search-section">
+        <div class="search-box">
+            <span>⌕</span>
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="ابحث عن مانجا..."
+            >
+        </div>
+
+        <div class="categories">
+            <button class="category active" data-category="all">الكل</button>
+            <button class="category" data-category="action">أكشن</button>
+            <button class="category" data-category="romance">رومانسي</button>
+            <button class="category" data-category="fantasy">فانتازيا</button>
+            <button class="category" data-category="comedy">كوميدي</button>
+        </div>
+    </section>
+
+
+    <!-- Manga -->
+    <section class="section" id="manga">
+
+        <div class="section-title">
+            <div>
+                <span>DISCOVER</span>
+                <h2>استكشف المانجا</h2>
+            </div>
+
+            <a href="#">عرض الكل ←</a>
+        </div>
+
+
+        <div class="manga-grid" id="mangaGrid">
+
+            <article
+                class="manga-card"
+                data-title="Solo Leveling"
+                data-category="action fantasy"
+            >
+                <div class="cover">
+                    <img
+                        src="https://images.unsplash.com/photo-1613376023733-6891a72bdb3c?auto=format&fit=crop&w=600&q=80"
+                        alt="Solo Leveling"
+                    >
+                    <span class="status">مكتملة</span>
+                </div>
+
+                <div class="manga-info">
+                    <h3>Solo Leveling</h3>
+                    <p>أكشن • فانتازيا</p>
+
+                    <div class="rating">
+                        ★ 9.8
+                    </div>
+
+                    <a href="#" class="read-btn">
+                        قراءة الآن
+                    </a>
+                </div>
+            </article>
+
+
+            <article
+                class="manga-card"
+                data-title="One Piece"
+                data-category="action comedy"
+            >
+                <div class="cover">
+                    <img
+                        src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=600&q=80"
+                        alt="One Piece"
+                    >
+                    <span class="status ongoing">مستمرة</span>
+                </div>
+
+                <div class="manga-info">
+                    <h3>One Piece</h3>
+                    <p>أكشن • كوميدي</p>
+
+                    <div class="rating">
+                        ★ 9.7
+                    </div>
+
+                    <a href="#" class="read-btn">
+                        قراءة الآن
+                    </a>
+                </div>
+            </article>
+
+
+            <article
+                class="manga-card"
+                data-title="Attack on Titan"
+                data-category="action fantasy"
+            >
+                <div class="cover">
+                    <img
+                        src="https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?auto=format&fit=crop&w=600&q=80"
+                        alt="Attack on Titan"
+                    >
+                    <span class="status">مكتملة</span>
+                </div>
+
+                <div class="manga-info">
+                    <h3>Attack on Titan</h3>
+                    <p>أكشن • فانتازيا</p>
+
+                    <div class="rating">
+                        ★ 9.5
+                    </div>
+
+                    <a href="#" class="read-btn">
+                        قراءة الآن
+                    </a>
+                </div>
+            </article>
+
+
+            <article
+                class="manga-card"
+                data-title="Blue Lock"
+                data-category="action"
+            >
+                <div class="cover">
+                    <img
+                        src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=600&q=80"
+                        alt="Blue Lock"
+                    >
+                    <span class="status ongoing">مستمرة</span>
+                </div>
+
+                <div class="manga-info">
+                    <h3>Blue Lock</h3>
+                    <p>أكشن • رياضة</p>
+
+                    <div class="rating">
+                        ★ 9.2
+                    </div>
+
+                    <a href="#" class="read-btn">
+                        قراءة الآن
+                    </a>
+                </div>
+            </article>
+
+
+            <article
+                class="manga-card"
+                data-title="Jujutsu Kaisen"
+                data-category="action fantasy"
+            >
+                <div class="cover">
+                    <img
+                        src="https://images.unsplash.com/photo-1607604276583-eef5e9a5f5a3?auto=format&fit=crop&w=600&q=80"
+                        alt="Jujutsu Kaisen"
+                    >
+                    <span class="status">مكتملة</span>
+                </div>
+
+                <div class="manga-info">
+                    <h3>Jujutsu Kaisen</h3>
+                    <p>أكشن • فانتازيا</p>
+
+                    <div class="rating">
+                        ★ 9.4
+                    </div>
+
+                    <a href="#" class="read-btn">
+                        قراءة الآن
+                    </a>
+                </div>
+            </article>
+
+
+            <article
+                class="manga-card"
+                data-title="My Dress-Up Darling"
+                data-category="romance comedy"
+            >
+                <div class="cover">
+                    <img
+                        src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=600&q=80"
+                        alt="My Dress-Up Darling"
+                    >
+                    <span class="status ongoing">مستمرة</span>
+                </div>
+
+                <div class="manga-info">
+                    <h3>My Dress-Up Darling</h3>
+                    <p>رومانسي • كوميدي</p>
+
+                    <div class="rating">
+                        ★ 9.0
+                    </div>
+
+                    <a href="#" class="read-btn">
+                        قراءة الآن
+                    </a>
+                </div>
+            </article>
+
+        </div>
+
+        <div id="noResults" class="no-results">
+            لم يتم العثور على مانجا.
+        </div>
+
+    </section>
+
+
+    <!-- Latest -->
+    <section class="section latest" id="latest">
+
+        <div class="section-title">
+            <div>
+                <span>UPDATES</span>
+                <h2>آخر التحديثات</h2>
+            </div>
+        </div>
+
+        <div class="chapter-list">
+
+            <div class="chapter">
+                <div class="chapter-cover"></div>
+
+                <div class="chapter-name">
+                    <strong>Solo Leveling</strong>
+                    <span>الفصل 200</span>
+                </div>
+
+                <span class="time">منذ ساعتين</span>
+
+                <a href="#">قراءة</a>
+            </div>
+
+
+            <div class="chapter">
+                <div class="chapter-cover second"></div>
+
+                <div class="chapter-name">
+                    <strong>One Piece</strong>
+                    <span>الفصل 1160</span>
+                </div>
+
+                <span class="time">منذ 5 ساعات</span>
+
+                <a href="#">قراءة</a>
+            </div>
+
+
+            <div class="chapter">
+                <div class="chapter-cover third"></div>
+
+                <div class="chapter-name">
+                    <strong>Blue Lock</strong>
+                    <span>الفصل 320</span>
+                </div>
+
+                <span class="time">منذ يوم</span>
+
+                <a href="#">قراءة</a>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+    <div class="logo">
+        <span>Manga</span>X
+    </div>
+
+    <p>
+        جميع الحقوق محفوظة © 2026 MangaX
+    </p>
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
