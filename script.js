@@ -1,0 +1,10 @@
+const works=[
+{title:"Solo Leveling",file:"solo-leveling.html",cover:"https://images.unsplash.com/photo-1613376023733-6891a72bdb3c?auto=format&fit=crop&w=900&q=85",description:"بعد أن أصبح أضعف صياد في العالم، يحصل سونغ جين وو على قدرة غامضة تسمح له بالتطور بلا حدود.",genres:["أكشن","فانتازيا","مغامرة"],status:"ongoing"}
+];
+const names={ongoing:"مستمر",completed:"مكتمل",paused:"متوقف"};
+let status="all",query="";
+const worksEl=document.getElementById("works"),countEl=document.getElementById("count"),empty=document.getElementById("empty");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+function render(){const q=query.toLowerCase();const list=works.filter(w=>(status==="all"||w.status===status)&&(!q||`${w.title} ${w.description} ${w.genres.join(" ")}`.toLowerCase().includes(q)));worksEl.innerHTML="";countEl.textContent=`${list.length} عمل`;empty.hidden=list.length!==0;list.forEach(w=>{const card=document.createElement("article");card.className="work";card.innerHTML=`<div class="cover"><img src="${esc(w.cover)}" alt="${esc(w.title)}" loading="lazy"><span class="status ${w.status}">${names[w.status]}</span></div><div class="work-info"><h3>${esc(w.title)}</h3><p class="description">${esc(w.description)}</p><div class="genres">${w.genres.map(g=>`<span class="genre">${esc(g)}</span>`).join("")}</div><a class="read" href="${esc(w.file)}">عرض العمل</a></div>`;worksEl.appendChild(card)})}
+document.getElementById("search").addEventListener("input",e=>{query=e.target.value.trim();render()});
+document.querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));b.classList.add("active");status=b.dataset.status;render()}));render();
