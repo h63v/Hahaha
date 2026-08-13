@@ -1,5 +1,5 @@
 const works=[
-{title:"Solo Leveling",file:"solo-leveling.html",cover:"https://images.unsplash.com/photo-1613376023733-6891a72bdb3c?auto=format&fit=crop&w=900&q=85",description:"بعد أن أصبح أضعف صياد في العالم، يحصل سونغ جين وو على قدرة غامضة تسمح له بالتطور بلا حدود.",genres:["أكشن","فانتازيا","مغامرة"],status:"ongoing"}
+{title:"Solo Leveling",file:"solo-leveling.html",cover:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRB1hpZuJ1oRnxEPlEW9CxiotGlMtZczYGz8STsCxZWrjjXOdUAa5N5QRiH&s=10",description:"بعد أن أصبح أضعف صياد في العالم، يحصل سونغ جين وو على قدرة غامضة تسمح له بالتطور بلا حدود.",genres:["أكشن","فانتازيا","مغامرة"],status:"ongoing"}
 ];
 const names={ongoing:"مستمر",completed:"مكتمل",paused:"متوقف"};
 let status="all",query="";
