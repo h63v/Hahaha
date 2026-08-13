@@ -1,4 +1,13 @@
-const MANGA_FOLDER = "manga/solo leveling";
+const GITHUB_OWNER = "h63v";
+const GITHUB_REPO = "Hahaha";
+const GITHUB_BRANCH = "main";
+const MANGA_FOLDER = "manga";
+
+const API_BASE =
+    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
+
+const RAW_BASE =
+    `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}`;
 
 const worksContainer = document.getElementById("works");
 const emptyMessage = document.getElementById("empty");
@@ -16,69 +25,21 @@ let currentStatus = "all";
 let currentSearch = "";
 
 
-/* =========================================
-   معرفة GitHub Owner + Repository تلقائياً
-   ========================================= */
+/* ==============================
+   GitHub API
+============================== */
 
-function getGitHubInfo() {
-
-    const host = window.location.hostname;
-    const path = window.location.pathname;
-
-    /*
-      مثال:
-
-      username.github.io
-      ↓
-      owner = username
-
-      username.github.io/MangaX/
-      ↓
-      repo = MangaX
-    */
-
-    if (!host.endsWith(".github.io")) {
-        console.error(
-            "MangaX: الموقع ليس مستضافاً على GitHub Pages."
-        );
-        return null;
-    }
-
-    const owner = host.split(".")[0];
-
-    const parts = path
-        .split("/")
-        .filter(Boolean);
-
-    const repo = parts.length > 0
-        ? parts[0]
-        : `${owner}.github.io`;
-
-    return {
-        owner,
-        repo
-    };
-}
-
-
-/* =========================================
-   جلب محتويات مجلد من GitHub
-   ========================================= */
-
-async function getGitHubContents(path) {
-
-    const github = getGitHubInfo();
-
-    if (!github) {
-        throw new Error("لم يتم التعرف على GitHub repository");
-    }
+async function getContents(path) {
 
     const url =
-        `https://api.github.com/repos/${github.owner}/${github.repo}/contents/${path}`;
+        `${API_BASE}/${path
+            .split("/")
+            .map(encodeURIComponent)
+            .join("/")}`;
 
     const response = await fetch(url, {
         headers: {
-            "Accept": "application/vnd.github+json"
+            Accept: "application/vnd.github+json"
         }
     });
 
@@ -92,9 +53,33 @@ async function getGitHubContents(path) {
 }
 
 
-/* =========================================
-   قراءة Meta من صفحة العمل
-   ========================================= */
+/* ==============================
+   تحميل ملف HTML
+============================== */
+
+async function getHTML(path) {
+
+    const url =
+        `${RAW_BASE}/${path
+            .split("/")
+            .map(encodeURIComponent)
+            .join("/")}`;
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error(
+            `فشل تحميل ${path}`
+        );
+    }
+
+    return await response.text();
+}
+
+
+/* ==============================
+   قراءة Meta
+============================== */
 
 function getMeta(html, name) {
 
@@ -105,27 +90,30 @@ function getMeta(html, name) {
 
     const match = html.match(regex);
 
-    return match ? match[1] : "";
+    return match ? match[1].trim() : "";
 }
 
 
-/* =========================================
-   استخراج عنوان العمل
-   ========================================= */
+/* ==============================
+   عنوان العمل
+============================== */
 
 function getTitle(html, fallback) {
 
-    const metaTitle = getMeta(html, "title");
+    const metaTitle =
+        getMeta(html, "title");
 
     if (metaTitle) {
         return metaTitle;
     }
 
-    const titleMatch =
-        html.match(/<title[^>]*>(.*?)<\/title>/i);
+    const title =
+        html.match(
+            /<title[^>]*>(.*?)<\/title>/i
+        );
 
-    if (titleMatch) {
-        return titleMatch[1]
+    if (title) {
+        return title[1]
             .replace(/\s*[-|—].*$/, "")
             .trim();
     }
@@ -134,135 +122,186 @@ function getTitle(html, fallback) {
 }
 
 
-/* =========================================
-   قراءة بيانات العمل
-   ========================================= */
+/* ==============================
+   اكتشاف ملف العمل
+============================== */
+
+function findWorkFile(files) {
+
+    return files.find(file => {
+
+        if (file.type !== "file") {
+            return false;
+        }
+
+        if (!file.name.endsWith(".html")) {
+            return false;
+        }
+
+        return !/-chapter-\d+\.html$/i
+            .test(file.name);
+    });
+}
+
+
+/* ==============================
+   تحميل عمل
+============================== */
 
 async function loadWork(folder) {
 
     const folderName = folder.name;
 
+    const folderPath =
+        `${MANGA_FOLDER}/${folderName}`;
+
     const files =
-        await getGitHubContents(
-            `${MANGA_FOLDER}/${folderName}`
-        );
+        await getContents(folderPath);
 
-    /*
-      نبحث عن ملف العمل الأساسي
 
-      مثال:
+    const workFile =
+        findWorkFile(files);
 
-      solo-leveling.html
-
-      وليس:
-
-      solo-leveling-chapter-1.html
-    */
-
-    const workFile = files.find(file =>
-        file.type === "file" &&
-        file.name.endsWith(".html") &&
-        !/-chapter-\d+\.html$/i.test(file.name)
-    );
 
     if (!workFile) {
+
         console.warn(
-            `لم يتم العثور على ملف العمل داخل ${folderName}`
+            `لم يتم العثور على ملف العمل داخل: ${folderName}`
         );
 
         return null;
     }
 
 
-    /* جلب HTML الخاص بالعمل */
+    const workPath =
+        `${folderPath}/${workFile.name}`;
 
-    const response =
-        await fetch(workFile.download_url);
 
     const html =
-        await response.text();
+        await getHTML(workPath);
 
 
-    /* استخراج المعلومات */
+    /* معلومات العمل */
 
     const title =
-        getTitle(html, folderName);
+        getTitle(
+            html,
+            folderName
+        );
+
 
     const cover =
-        getMeta(html, "cover");
+        getMeta(
+            html,
+            "cover"
+        );
+
 
     const description =
-        getMeta(html, "description");
+        getMeta(
+            html,
+            "description"
+        );
 
-    const status =
-        getMeta(html, "status") || "ongoing";
 
     const genres =
-        getMeta(html, "genres")
-            .split(",")
-            .map(x => x.trim())
-            .filter(Boolean);
-
-
-    /* =====================================
-       جلب الفصول
-       ===================================== */
-
-    const chapters = files
-        .filter(file =>
-            file.type === "file" &&
-            new RegExp(
-                `^${escapeRegex(
-                    workFile.name.replace(".html", "")
-                )}-chapter-\\d+\\.html$`,
-                "i"
-            ).test(file.name)
+        getMeta(
+            html,
+            "genres"
         )
-        .map(file => {
+        .split(",")
+        .map(x => x.trim())
+        .filter(Boolean);
 
-            const match =
-                file.name.match(
-                    /-chapter-(\d+)\.html$/i
-                );
 
-            return {
-                number: match
-                    ? Number(match[1])
-                    : 0,
+    const status =
+        getMeta(
+            html,
+            "status"
+        ) || "ongoing";
 
-                name: file.name,
 
-                url:
-                    `${MANGA_FOLDER}/${encodeURIComponent(folderName)}/${file.name}`
-            };
+    /* ==============================
+       الفصول
+    ============================== */
 
-        })
-        .sort((a, b) =>
-            b.number - a.number
+    const baseName =
+        workFile.name
+            .replace(
+                /\.html$/i,
+                ""
+            );
+
+
+    const chapterRegex =
+        new RegExp(
+            `^${escapeRegex(baseName)}-chapter-(\\d+)\\.html$`,
+            "i"
         );
+
+
+    const chapters =
+        files
+            .filter(file =>
+                file.type === "file"
+            )
+            .map(file => {
+
+                const match =
+                    file.name.match(
+                        chapterRegex
+                    );
+
+                if (!match) {
+                    return null;
+                }
+
+                return {
+                    number:
+                        Number(match[1]),
+
+                    name:
+                        file.name,
+
+                    url:
+                        `${folderPath}/${file.name}`
+                };
+
+            })
+            .filter(Boolean)
+            .sort(
+                (a, b) =>
+                    b.number - a.number
+            );
 
 
     return {
 
         title,
-        folder: folderName,
+
+        folder:
+            folderName,
 
         file:
-            `${MANGA_FOLDER}/${encodeURIComponent(folderName)}/${workFile.name}`,
+            workPath,
 
         cover,
+
         description,
+
         genres,
+
         status,
+
         chapters
 
     };
 }
 
 
-/* =========================================
-   حماية Regex
-   ========================================= */
+/* ==============================
+   Regex protection
+============================== */
 
 function escapeRegex(string) {
 
@@ -270,13 +309,12 @@ function escapeRegex(string) {
         /[.*+?^${}()|[\]\\]/g,
         "\\$&"
     );
-
 }
 
 
-/* =========================================
+/* ==============================
    تحميل جميع الأعمال
-   ========================================= */
+============================== */
 
 async function loadAllWorks() {
 
@@ -288,41 +326,58 @@ async function loadAllWorks() {
             </div>
         `;
 
+
         const folders =
-            await getGitHubContents(
+            await getContents(
                 MANGA_FOLDER
             );
 
 
-        const workFolders =
-            folders.filter(item =>
-                item.type === "dir"
+        const mangaFolders =
+            folders.filter(
+                item =>
+                    item.type === "dir"
             );
 
 
-        const results =
+        const loaded =
             await Promise.all(
-                workFolders.map(folder =>
-                    loadWork(folder)
+                mangaFolders.map(
+                    folder =>
+                        loadWork(folder)
                 )
             );
 
 
         works =
-            results.filter(Boolean);
+            loaded.filter(Boolean);
 
 
         render();
+
 
     } catch (error) {
 
         console.error(error);
 
+
         worksContainer.innerHTML = `
             <div class="empty">
                 <h3>حدث خطأ أثناء تحميل الأعمال</h3>
-                <p style="margin-top:10px">
-                    تأكد من وجود مجلد manga وأن المستودع Public.
+
+                <p style="margin-top:12px">
+                    تأكد من وجود مجلد
+                    <strong>manga</strong>
+                    داخل مستودع GitHub.
+                </p>
+
+                <p style="margin-top:8px">
+                    Repository:
+                    <strong>h63v/Hahaha</strong>
+                </p>
+
+                <p style="margin-top:8px">
+                    ${escapeHTML(error.message)}
                 </p>
             </div>
         `;
@@ -332,27 +387,44 @@ async function loadAllWorks() {
 }
 
 
-/* =========================================
-   حماية النصوص
-   ========================================= */
+/* ==============================
+   Escape HTML
+============================== */
 
 function escapeHTML(value) {
 
     return String(value ?? "")
-        .replace(/[&<>"']/g, char => ({
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#039;"
-        })[char]);
-
+        .replace(
+            /[&<>"']/g,
+            char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            })[char]
+        );
 }
 
 
-/* =========================================
+/* ==============================
+   رابط الملف
+============================== */
+
+function getSiteURL(path) {
+
+    return path
+        .split("/")
+        .map(
+            encodeURIComponent
+        )
+        .join("/");
+}
+
+
+/* ==============================
    عرض الأعمال
-   ========================================= */
+============================== */
 
 function render() {
 
@@ -363,12 +435,12 @@ function render() {
     const filtered =
         works.filter(work => {
 
-            const matchesStatus =
+            const statusMatch =
                 currentStatus === "all" ||
                 work.status === currentStatus;
 
 
-            const searchable =
+            const text =
                 [
                     work.title,
                     work.description,
@@ -379,8 +451,8 @@ function render() {
 
 
             return (
-                matchesStatus &&
-                searchable.includes(search)
+                statusMatch &&
+                text.includes(search)
             );
 
         });
@@ -398,7 +470,6 @@ function render() {
         emptyMessage.hidden = false;
 
         return;
-
     }
 
 
@@ -408,19 +479,26 @@ function render() {
     filtered.forEach(work => {
 
         const card =
-            document.createElement("article");
+            document.createElement(
+                "article"
+            );
 
         card.className = "work";
 
 
         const genres =
             work.genres
-                .map(genre =>
-                    `<span class="genre">
-                        ${escapeHTML(genre)}
-                    </span>`
+                .map(
+                    genre =>
+                        `<span class="genre">
+                            ${escapeHTML(genre)}
+                        </span>`
                 )
                 .join("");
+
+
+        const workURL =
+            getSiteURL(work.file);
 
 
         card.innerHTML = `
@@ -431,6 +509,7 @@ function render() {
                     src="${escapeHTML(work.cover)}"
                     alt="${escapeHTML(work.title)}"
                     loading="lazy"
+                    onerror="this.src='https://placehold.co/600x850/15151e/8b5cf6?text=MangaX'"
                 >
 
                 <span class="status ${escapeHTML(work.status)}">
@@ -451,7 +530,9 @@ function render() {
 
 
                 <p class="description">
-                    ${escapeHTML(work.description)}
+                    ${escapeHTML(
+                        work.description
+                    )}
                 </p>
 
 
@@ -462,7 +543,7 @@ function render() {
 
                 <a
                     class="read"
-                    href="${escapeHTML(work.file)}"
+                    href="${workURL}"
                 >
                     عرض العمل
                 </a>
@@ -479,16 +560,17 @@ function render() {
 }
 
 
-/* =========================================
+/* ==============================
    البحث
-   ========================================= */
+============================== */
 
 searchInput.addEventListener(
     "input",
     event => {
 
         currentSearch =
-            event.target.value.trim();
+            event.target.value
+                .trim();
 
         render();
 
@@ -496,9 +578,9 @@ searchInput.addEventListener(
 );
 
 
-/* =========================================
+/* ==============================
    الفلاتر
-   ========================================= */
+============================== */
 
 document
     .querySelectorAll(".filter")
@@ -510,12 +592,16 @@ document
 
                 document
                     .querySelectorAll(".filter")
-                    .forEach(btn =>
-                        btn.classList.remove("active")
+                    .forEach(
+                        btn =>
+                            btn.classList
+                                .remove("active")
                     );
 
 
-                button.classList.add("active");
+                button.classList.add(
+                    "active"
+                );
 
 
                 currentStatus =
@@ -530,8 +616,8 @@ document
     });
 
 
-/* =========================================
-   تشغيل النظام
-   ========================================= */
+/* ==============================
+   تشغيل
+============================== */
 
 loadAllWorks();
