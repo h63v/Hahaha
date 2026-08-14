@@ -1,123 +1,268 @@
+/* =========================================================
+   MangaX - Dynamic Manga Loader
+   GitHub + jsDelivr
+   بدون index.json
+========================================================= */
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
 const OWNER = "h63v";
 const REPO = "Hahaha";
 const BRANCH = "main";
+
 const ROOT = "manga";
 
-const API =
-    `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
 
-const RAW =
+/*
+   jsDelivr
+
+   يستخدم لاكتشاف الملفات وتحميل صفحات الأعمال.
+*/
+
+const JSDELIVR_FILES =
+    `https://data.jsdelivr.com/v1/package/gh/${OWNER}/${REPO}@${BRANCH}/flat`;
+
+const JSDELIVR_RAW =
+    `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}`;
+
+
+/*
+   GitHub fallback
+*/
+
+const GITHUB_API =
+    `https://api.github.com/repos/${OWNER}/${REPO}`;
+
+const GITHUB_CONTENTS =
+    `${GITHUB_API}/contents`;
+
+
+/*
+   Raw GitHub fallback
+*/
+
+const GITHUB_RAW =
     `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}`;
 
-const worksEl = document.querySelector("#works");
-const empty = document.querySelector("#empty");
-const count = document.querySelector("#count");
-const search = document.querySelector("#search");
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const worksEl =
+    document.querySelector("#works");
+
+const emptyEl =
+    document.querySelector("#empty");
+
+const countEl =
+    document.querySelector("#count");
+
+const searchEl =
+    document.querySelector("#search");
+
+
+/* =========================================================
+   STATE
+========================================================= */
 
 let works = [];
-let status = "all";
-let q = "";
+
+let currentStatus = "all";
+
+let searchQuery = "";
+
+
+/* =========================================================
+   STATUS
+========================================================= */
 
 const statusNames = {
+
     ongoing: "مستمر",
+
     completed: "مكتمل",
-    paused: "متوقف"
+
+    paused: "متوقف",
+
+    stopped: "متوقف"
+
 };
 
 
 /* =========================================================
-   HELPERS
+   URL ENCODING
 ========================================================= */
 
-const enc = path =>
-    path
+function encodePath(path) {
+
+    return path
         .split("/")
-        .map(encodeURIComponent)
+        .map(part => encodeURIComponent(part))
         .join("/");
-
-
-async function contents(path) {
-
-    const response = await fetch(
-        `${API}/${enc(path)}?ref=${BRANCH}`
-    );
-
-    if (!response.ok) {
-        throw new Error(
-            `GitHub API ${response.status}`
-        );
-    }
-
-    return response.json();
 }
 
 
-async function html(path) {
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
-    const response = await fetch(
-        `${RAW}/${enc(path)}`
-    );
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(
+            /[&<>"']/g,
+            char => {
+
+                const map = {
+
+                    "&": "&amp;",
+
+                    "<": "&lt;",
+
+                    ">": "&gt;",
+
+                    '"': "&quot;",
+
+                    "'": "&#039;"
+
+                };
+
+                return map[char];
+            }
+        );
+}
+
+
+/* =========================================================
+   FETCH TEXT
+========================================================= */
+
+async function fetchText(url) {
+
+    const response = await fetch(url, {
+
+        cache: "no-store",
+
+        headers: {
+
+            "Accept": "text/html,text/plain,*/*"
+
+        }
+
+    });
+
 
     if (!response.ok) {
+
         throw new Error(
-            `تعذر تحميل ${path}`
+            `HTTP ${response.status}`
         );
     }
+
 
     return response.text();
 }
 
 
 /* =========================================================
-   META
+   GET META
 ========================================================= */
 
-function meta(htmlText, name) {
+function getMeta(html, name) {
 
-    const regex = new RegExp(
-        `<meta[^>]+name=["']${name}["'][^>]+content=["']([^"']*)["']`,
-        "i"
-    );
+    /*
+       يقبل اختلاف ترتيب attributes
+    */
 
-    const match = htmlText.match(regex);
+    const regex =
+        /<meta\b([^>]+)>/gi;
 
-    return match
-        ? match[1].trim()
-        : "";
+    let match;
+
+
+    while (
+        (match = regex.exec(html)) !== null
+    ) {
+
+        const attributes =
+            match[1];
+
+
+        const nameMatch =
+            attributes.match(
+                /\bname\s*=\s*["']([^"']+)["']/i
+            );
+
+
+        if (
+            !nameMatch ||
+            nameMatch[1].toLowerCase() !==
+            name.toLowerCase()
+        ) {
+
+            continue;
+        }
+
+
+        const contentMatch =
+            attributes.match(
+                /\bcontent\s*=\s*["']([^"']*)["']/i
+            );
+
+
+        if (contentMatch) {
+
+            return contentMatch[1].trim();
+        }
+    }
+
+
+    return "";
 }
 
 
 /* =========================================================
-   HTML TEXT
+   GET TITLE
 ========================================================= */
 
-function getTitle(htmlText) {
+function getTitle(html) {
 
-    const metaTitle = meta(
-        htmlText,
-        "title"
-    );
+    const metaTitle =
+        getMeta(html, "title");
+
 
     if (metaTitle) {
-        return metaTitle;
-    }
 
-
-    const titleMatch = htmlText.match(
-        /<title[^>]*>([\s\S]*?)<\/title>/i
-    );
-
-    if (titleMatch) {
-
-        return titleMatch[1]
+        return metaTitle
             .replace(/\s*\|\s*MangaX\s*$/i, "")
             .trim();
     }
 
 
-    const h1Match = htmlText.match(
-        /<h1[^>]*>([\s\S]*?)<\/h1>/i
-    );
+    const titleMatch =
+        html.match(
+            /<title[^>]*>([\s\S]*?)<\/title>/i
+        );
+
+
+    if (titleMatch) {
+
+        return titleMatch[1]
+            .replace(/<[^>]+>/g, "")
+            .replace(/\s*\|\s*MangaX\s*$/i, "")
+            .trim();
+    }
+
+
+    const h1Match =
+        html.match(
+            /<h1[^>]*>([\s\S]*?)<\/h1>/i
+        );
+
 
     if (h1Match) {
 
@@ -126,43 +271,78 @@ function getTitle(htmlText) {
             .trim();
     }
 
+
     return "";
 }
 
 
-function getCover(htmlText) {
+/* =========================================================
+   GET COVER
+========================================================= */
 
-    /* أولاً حاول meta cover */
+function getCover(html) {
 
-    const metaCover = meta(
-        htmlText,
-        "cover"
-    );
+    /*
+       الأفضل:
 
-    if (metaCover) {
+       <meta name="cover" content="URL">
+    */
+
+    const metaCover =
+        getMeta(html, "cover");
+
+
+    if (
+        metaCover &&
+        !isInvalidCover(metaCover)
+    ) {
+
         return metaCover;
     }
 
 
-    /* بعدها ابحث داخل .cover */
+    /*
+       بعدها نحاول أخذ الصورة من .cover
+    */
 
-    const coverMatch = htmlText.match(
-        /<div[^>]*class=["'][^"']*\bcover\b[^"']*["'][^>]*>[\s\S]*?<img[^>]+src=["']([^"']+)["']/i
-    );
+    const coverBlock =
+        html.match(
+            /<div[^>]*class\s*=\s*["'][^"']*\bcover\b[^"']*["'][^>]*>([\s\S]*?)<\/div>/i
+        );
 
-    if (coverMatch) {
-        return coverMatch[1].trim();
+
+    if (coverBlock) {
+
+        const image =
+            extractFirstImage(
+                coverBlock[1]
+            );
+
+
+        if (
+            image &&
+            !isInvalidCover(image)
+        ) {
+
+            return image;
+        }
     }
 
 
-    /* بعدها أي صورة */
+    /*
+       بعدها أول صورة في الصفحة
+    */
 
-    const imageMatch = htmlText.match(
-        /<img[^>]+src=["']([^"']+)["']/i
-    );
+    const firstImage =
+        extractFirstImage(html);
 
-    if (imageMatch) {
-        return imageMatch[1].trim();
+
+    if (
+        firstImage &&
+        !isInvalidCover(firstImage)
+    ) {
+
+        return firstImage;
     }
 
 
@@ -170,123 +350,229 @@ function getCover(htmlText) {
 }
 
 
-function getDescription(htmlText) {
+/* =========================================================
+   EXTRACT IMAGE
+========================================================= */
 
-    const metaDescription = meta(
-        htmlText,
-        "description"
-    );
+function extractFirstImage(html) {
+
+    const match =
+        html.match(
+            /<img\b[^>]*?\bsrc\s*=\s*["']([^"']+)["']/i
+        );
+
+
+    if (!match) {
+
+        return "";
+    }
+
+
+    return match[1].trim();
+}
+
+
+/* =========================================================
+   INVALID COVER
+========================================================= */
+
+function isInvalidCover(url) {
+
+    if (!url) {
+
+        return true;
+    }
+
+
+    const lower =
+        url.toLowerCase();
+
+
+    /*
+       الصورة الافتراضية التي لا نريدها
+    */
+
+    if (
+        lower.includes(
+            "hentaislayer.net/images/user/no-image.jpg"
+        )
+    ) {
+
+        return true;
+    }
+
+
+    if (
+        lower.includes("no-image.jpg")
+    ) {
+
+        return true;
+    }
+
+
+    if (
+        lower.includes("no-image.png")
+    ) {
+
+        return true;
+    }
+
+
+    if (
+        lower.includes("placeholder")
+    ) {
+
+        return true;
+    }
+
+
+    return false;
+}
+
+
+/* =========================================================
+   GET DESCRIPTION
+========================================================= */
+
+function getDescription(html) {
+
+    const metaDescription =
+        getMeta(
+            html,
+            "description"
+        );
+
 
     if (metaDescription) {
+
         return metaDescription;
     }
 
 
-    const descriptionMatch = htmlText.match(
-        /<p[^>]*class=["'][^"']*\bdescription\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/i
-    );
+    const match =
+        html.match(
+            /<p[^>]*class\s*=\s*["'][^"']*\bdescription\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/i
+        );
 
-    if (descriptionMatch) {
 
-        return descriptionMatch[1]
+    if (match) {
+
+        return match[1]
             .replace(/<[^>]+>/g, "")
             .trim();
     }
 
 
-    return "";
+    return "لم تتم إضافة قصة بعد";
 }
 
 
-function getGenres(htmlText) {
+/* =========================================================
+   GET GENRES
+========================================================= */
 
-    const metaGenres = meta(
-        htmlText,
-        "genres"
-    );
+function getGenres(html) {
+
+    const metaGenres =
+        getMeta(
+            html,
+            "genres"
+        );
+
 
     if (metaGenres) {
 
         return metaGenres
             .split(",")
-            .map(x => x.trim())
+            .map(
+                genre =>
+                    genre.trim()
+            )
             .filter(Boolean);
     }
 
 
-    const genresMatch = htmlText.match(
-        /<div[^>]*class=["'][^"']*\bgenres\b[^"']*["'][^>]*>([\s\S]*?)<\/div>/i
-    );
+    /*
+       fallback من HTML
+    */
 
-    if (!genresMatch) {
+    const block =
+        html.match(
+            /<div[^>]*class\s*=\s*["'][^"']*\bgenres\b[^"']*["'][^>]*>([\s\S]*?)<\/div>/i
+        );
+
+
+    if (!block) {
+
         return [];
     }
 
 
     const genres = [];
 
+
     const regex =
-        /<span[^>]*class=["'][^"']*\bgenre\b[^"']*["'][^>]*>([\s\S]*?)<\/span>/gi;
+        /<span[^>]*class\s*=\s*["'][^"']*\bgenre\b[^"']*["'][^>]*>([\s\S]*?)<\/span>/gi;
+
 
     let match;
 
-    while ((match = regex.exec(genresMatch[1]))) {
 
-        const value = match[1]
-            .replace(/<[^>]+>/g, "")
-            .trim();
+    while (
+        (match = regex.exec(block[1])) !== null
+    ) {
 
-        if (value) {
-            genres.push(value);
+        const genre =
+            match[1]
+                .replace(/<[^>]+>/g, "")
+                .trim();
+
+
+        if (genre) {
+
+            genres.push(genre);
         }
     }
+
 
     return genres;
 }
 
 
-function getStatus(htmlText) {
+/* =========================================================
+   GET STATUS
+========================================================= */
 
-    const metaStatus = meta(
-        htmlText,
-        "status"
-    );
+function getStatus(html) {
+
+    const metaStatus =
+        getMeta(
+            html,
+            "status"
+        );
+
 
     if (metaStatus) {
-        return metaStatus;
+
+        return normalizeStatus(
+            metaStatus
+        );
     }
 
 
-    const statusMatch = htmlText.match(
-        /<span[^>]*class=["'][^"']*\bstatus\b[^"']*["'][^>]*>([\s\S]*?)<\/span>/i
-    );
+    const match =
+        html.match(
+            /class\s*=\s*["'][^"']*\bstatus\b[^"']*["'][^>]*>([\s\S]*?)<\/(?:span|div)>/i
+        );
 
-    if (statusMatch) {
 
-        const value = statusMatch[1]
-            .replace(/<[^>]+>/g, "")
-            .trim();
+    if (match) {
 
-        if (
-            value === "مستمر" ||
-            value.toLowerCase() === "ongoing"
-        ) {
-            return "ongoing";
-        }
-
-        if (
-            value === "مكتمل" ||
-            value.toLowerCase() === "completed"
-        ) {
-            return "completed";
-        }
-
-        if (
-            value === "متوقف" ||
-            value.toLowerCase() === "paused"
-        ) {
-            return "paused";
-        }
+        return normalizeStatus(
+            match[1]
+                .replace(/<[^>]+>/g, "")
+                .trim()
+        );
     }
 
 
@@ -295,79 +581,371 @@ function getStatus(htmlText) {
 
 
 /* =========================================================
-   ESCAPE
+   NORMALIZE STATUS
 ========================================================= */
 
-function esc(value) {
+function normalizeStatus(status) {
 
-    return String(value ?? "")
-        .replace(
-            /[&<>"']/g,
-            char => ({
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#039;"
-            }[char])
-        );
+    const value =
+        String(status)
+            .trim()
+            .toLowerCase();
+
+
+    if (
+        value === "ongoing" ||
+        value === "مستمر"
+    ) {
+
+        return "ongoing";
+    }
+
+
+    if (
+        value === "completed" ||
+        value === "complete" ||
+        value === "مكتمل"
+    ) {
+
+        return "completed";
+    }
+
+
+    if (
+        value === "paused" ||
+        value === "stopped" ||
+        value === "متوقف"
+    ) {
+
+        return "paused";
+    }
+
+
+    return "ongoing";
 }
 
 
 /* =========================================================
-   LOAD WORK
+   GET FILE LIST FROM JSDELIVR
 ========================================================= */
 
-async function load(folder) {
+async function getAllFiles() {
 
-    const folderPath =
-        `${ROOT}/${folder.name}`;
+    try {
+
+        const response =
+            await fetch(
+                JSDELIVR_FILES,
+                {
+                    cache: "no-store"
+                }
+            );
 
 
-    const files =
-        await contents(folderPath);
+        if (!response.ok) {
+
+            throw new Error(
+                `jsDelivr HTTP ${response.status}`
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        /*
+           jsDelivr يرجع:
+
+           {
+               files: [
+                   {
+                       name: "manga/..."
+                   }
+               ]
+           }
+        */
+
+        if (
+            !data ||
+            !Array.isArray(data.files)
+        ) {
+
+            throw new Error(
+                "استجابة jsDelivr غير صحيحة"
+            );
+        }
+
+
+        return data.files
+            .map(file => file.name)
+            .filter(Boolean);
+
+    } catch (error) {
+
+        console.warn(
+            "jsDelivr failed:",
+            error
+        );
+
+
+        /*
+           fallback إلى GitHub API
+        */
+
+        try {
+
+            const response =
+                await fetch(
+                    `${GITHUB_API}/git/trees/${BRANCH}?recursive=1`,
+                    {
+                        cache: "no-store"
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    `GitHub HTTP ${response.status}`
+                );
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                !data.tree ||
+                !Array.isArray(data.tree)
+            ) {
+
+                throw new Error(
+                    "GitHub tree غير صحيح"
+                );
+            }
+
+
+            return data.tree
+                .filter(
+                    file =>
+                        file.type === "blob"
+                )
+                .map(
+                    file =>
+                        file.path
+                );
+
+        } catch (fallbackError) {
+
+            console.error(
+                "GitHub fallback failed:",
+                fallbackError
+            );
+
+
+            throw new Error(
+                "تعذر تحميل قائمة الأعمال حالياً."
+            );
+        }
+    }
+}
+
+
+/* =========================================================
+   GET HTML FROM CDN
+========================================================= */
+
+async function getWorkHTML(path) {
+
+    /*
+       أول محاولة:
+
+       jsDelivr
+    */
+
+    try {
+
+        const url =
+            `${JSDELIVR_RAW}/${encodePath(path)}`;
+
+
+        const response =
+            await fetch(
+                url,
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        if (response.ok) {
+
+            return response.text();
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "CDN HTML failed:",
+            error
+        );
+    }
 
 
     /*
-       نبحث عن ملف العمل الأساسي
+       fallback:
 
-       مثال:
-
-       moms-friends.html
-
-       وليس:
-
-       moms-friends-chapter-1.html
+       raw.githubusercontent
     */
 
-    const workFile = files.find(
-        file =>
-            file.type === "file" &&
-            /\.html$/i.test(file.name) &&
-            !/-chapter-\d+\.html$/i.test(file.name)
-    );
+    const rawURL =
+        `${GITHUB_RAW}/${encodePath(path)}`;
 
 
-    if (!workFile) {
+    return fetchText(rawURL);
+}
+
+
+/* =========================================================
+   BUILD WORK LIST FROM FILES
+========================================================= */
+
+function getWorkFolders(files) {
+
+    const folders =
+        new Set();
+
+
+    files.forEach(path => {
+
+        if (
+            !path.startsWith(
+                `${ROOT}/`
+            )
+        ) {
+
+            return;
+        }
+
+
+        const relative =
+            path.substring(
+                ROOT.length + 1
+            );
+
+
+        const parts =
+            relative.split("/");
+
+
+        /*
+           نحتاج فقط:
+
+           manga/
+             work-name/
+               file.html
+        */
+
+        if (
+            parts.length >= 2
+        ) {
+
+            folders.add(
+                parts[0]
+            );
+        }
+    });
+
+
+    return [...folders];
+}
+
+
+/* =========================================================
+   LOAD ONE WORK
+========================================================= */
+
+async function loadWork(
+    folder,
+    files
+) {
+
+    const folderPrefix =
+        `${ROOT}/${folder}/`;
+
+
+    /*
+       ملفات HTML داخل مجلد العمل
+    */
+
+    const htmlFiles =
+        files.filter(
+            path =>
+                path.startsWith(folderPrefix) &&
+                /\.html$/i.test(path)
+        );
+
+
+    if (!htmlFiles.length) {
+
         return null;
     }
 
 
-    const workPath =
-        `${folderPath}/${workFile.name}`;
+    /*
+       ملف العمل الأساسي:
+
+       moms-friends.html
+
+       نستبعد:
+
+       moms-friends-chapter-1.html
+    */
+
+    const workFile =
+        htmlFiles.find(
+            path => {
+
+                const filename =
+                    path.substring(
+                        folderPrefix.length
+                    );
 
 
-    const page =
-        await html(workPath);
+                return (
+                    !/-chapter-\d+\.html$/i.test(
+                        filename
+                    )
+                );
+            }
+        );
+
+
+    if (!workFile) {
+
+        return null;
+    }
 
 
     /*
-       استخراج البيانات
+       تحميل صفحة العمل
+    */
+
+    const page =
+        await getWorkHTML(
+            workFile
+        );
+
+
+    /*
+       البيانات
     */
 
     const title =
         getTitle(page) ||
-        folder.name;
+        folder;
 
 
     const cover =
@@ -375,8 +953,7 @@ async function load(folder) {
 
 
     const description =
-        getDescription(page) ||
-        "لم تتم إضافة قصة بعد";
+        getDescription(page);
 
 
     const genres =
@@ -388,65 +965,92 @@ async function load(folder) {
 
 
     /*
-       استخراج اسم الملف الأساسي
+       اسم الملف الأساسي
 
        moms-friends.html
 
-       يصبح:
-
-       moms-friends
+       -> moms-friends
     */
 
+    const workFilename =
+        workFile
+            .split("/")
+            .pop();
+
+
     const baseName =
-        workFile.name.replace(
-            /\.html$/i,
-            ""
-        );
+        workFilename
+            .replace(
+                /\.html$/i,
+                ""
+            );
 
 
     /*
-       استخراج الفصول
-
-       moms-friends-chapter-1.html
-       moms-friends-chapter-2.html
-       ...
+       Regex للفصول
     */
+
+    const escapedBase =
+        baseName.replace(
+            /[.*+?^${}()|[\]\\]/g,
+            "\\$&"
+        );
+
 
     const chapterRegex =
         new RegExp(
-            `^${baseName}-chapter-(\\d+)\\.html$`,
+            `^${escapedBase}-chapter-(\\d+)\\.html$`,
             "i"
         );
 
 
-    const chapters = files
-        .filter(
-            file =>
-                file.type === "file" &&
-                chapterRegex.test(file.name)
-        )
-        .map(file => {
+    /*
+       اكتشاف الفصول
+    */
 
-            const match =
-                file.name.match(
-                    chapterRegex
-                );
+    const chapters =
+        htmlFiles
+            .map(path => {
 
-            return {
-                n: Number(match[1]),
-                file: file.name
-            };
-        })
-        .sort(
-            (a, b) => b.n - a.n
-        );
+                const filename =
+                    path.substring(
+                        folderPrefix.length
+                    );
+
+
+                const match =
+                    filename.match(
+                        chapterRegex
+                    );
+
+
+                if (!match) {
+
+                    return null;
+                }
+
+
+                return {
+
+                    number:
+                        Number(match[1]),
+
+                    path
+
+                };
+            })
+            .filter(Boolean)
+            .sort(
+                (a, b) =>
+                    b.number - a.number
+            );
 
 
     return {
 
         title,
 
-        slug: folder.name,
+        slug: folder,
 
         cover,
 
@@ -456,7 +1060,7 @@ async function load(folder) {
 
         status: workStatus,
 
-        file: workPath,
+        file: workFile,
 
         chapters
 
@@ -468,48 +1072,36 @@ async function load(folder) {
    LOAD ALL WORKS
 ========================================================= */
 
-async function init() {
+async function loadWorks() {
 
-    try {
-
-        const files =
-            await contents(ROOT);
+    const files =
+        await getAllFiles();
 
 
-        /*
-           فقط مجلدات الأعمال
-
-           index.json يتم تجاهله تلقائياً
-        */
-
-        const folders =
-            files.filter(
-                file =>
-                    file.type === "dir"
-            );
+    const folders =
+        getWorkFolders(files);
 
 
-        works =
-            (
-                await Promise.all(
-                    folders.map(load)
-                )
-            )
-            .filter(Boolean);
+    if (!folders.length) {
 
-
-        render();
-
-    } catch (error) {
-
-        console.error(error);
-
-        worksEl.innerHTML = `
-            <div class="empty">
-                ${esc(error.message)}
-            </div>
-        `;
+        return [];
     }
+
+
+    const loaded =
+        await Promise.all(
+            folders.map(
+                folder =>
+                    loadWork(
+                        folder,
+                        files
+                    )
+            )
+        );
+
+
+    return loaded
+        .filter(Boolean);
 }
 
 
@@ -519,147 +1111,219 @@ async function init() {
 
 function render() {
 
-    const list =
-        works.filter(work => {
+    if (!worksEl) {
 
-            const statusMatch =
-                status === "all" ||
-                work.status === status;
+        return;
+    }
 
 
-            const searchText = [
-                work.title,
-                work.description,
-                ...work.genres
-            ]
-                .join(" ")
-                .toLowerCase();
+    const filtered =
+        works.filter(
+            work => {
+
+                const matchesStatus =
+                    currentStatus === "all" ||
+                    work.status === currentStatus;
 
 
-            const searchMatch =
-                searchText.includes(q);
+                const searchable =
+                    [
+
+                        work.title,
+
+                        work.description,
+
+                        ...work.genres
+
+                    ]
+                    .join(" ")
+                    .toLowerCase();
 
 
-            return (
-                statusMatch &&
-                searchMatch
-            );
-        });
+                const matchesSearch =
+                    searchable.includes(
+                        searchQuery
+                    );
 
 
-    count.textContent =
-        `${list.length} عمل`;
+                return (
+                    matchesStatus &&
+                    matchesSearch
+                );
+            }
+        );
+
+
+    /*
+       العدد
+    */
+
+    if (countEl) {
+
+        countEl.textContent =
+            `${filtered.length} عمل`;
+    }
+
+
+    /*
+       Empty
+    */
+
+    if (emptyEl) {
+
+        emptyEl.hidden =
+            filtered.length !== 0;
+    }
 
 
     worksEl.innerHTML = "";
 
 
-    empty.hidden =
-        list.length !== 0;
+    /*
+       الأعمال
+    */
+
+    filtered.forEach(
+        work => {
+
+            const card =
+                document.createElement(
+                    "article"
+                );
 
 
-    list.forEach(work => {
-
-        const card =
-            document.createElement("article");
+            card.className =
+                "work";
 
 
-        card.className =
-            "work";
+            /*
+               الغلاف
+            */
+
+            let coverHTML;
 
 
-        /*
-           الغلاف
+            if (
+                work.cover &&
+                !isInvalidCover(
+                    work.cover
+                )
+            ) {
 
-           إذا كان موجوداً نستخدمه.
-           إذا لم يوجد نستخدم MangaX.
-        */
+                coverHTML = `
 
-        const coverHTML =
-            work.cover
-                ? `
                     <img
-                        src="${esc(work.cover)}"
-                        alt="${esc(work.title)}"
+                        src="${escapeHTML(work.cover)}"
+                        alt="${escapeHTML(work.title)}"
                         loading="lazy"
                         onerror="
                             this.onerror=null;
                             this.src='https://placehold.co/600x850/15151e/8b5cf6?text=MangaX';
                         "
                     >
-                  `
-                : `
+
+                `;
+
+            } else {
+
+                coverHTML = `
+
                     <div class="no-cover">
-                        <span>MangaX</span>
+
+                        <span>
+                            MangaX
+                        </span>
+
                     </div>
-                  `;
+
+                `;
+            }
 
 
-        /*
-           التصنيفات
-        */
+            /*
+               التصنيفات
+            */
 
-        const genresHTML =
-            work.genres
-                .map(
-                    genre =>
-                        `<span class="genre">
-                            ${esc(genre)}
-                        </span>`
-                )
-                .join("");
+            const genresHTML =
+                work.genres
+                    .map(
+                        genre => `
 
+                            <span class="genre">
+                                ${escapeHTML(genre)}
+                            </span>
 
-        /*
-           بطاقة العمل
-        */
-
-        card.innerHTML = `
-
-            <div class="cover">
-
-                ${coverHTML}
-
-                <span class="status">
-                    ${esc(
-                        statusNames[work.status]
-                        || work.status
-                    )}
-                </span>
-
-            </div>
+                        `
+                    )
+                    .join("");
 
 
-            <div class="work-info">
+            /*
+               البطاقة
+            */
 
-                <h3>
-                    ${esc(work.title)}
-                </h3>
+            card.innerHTML = `
 
+                <div class="cover">
 
-                <p class="description">
-                    ${esc(work.description)}
-                </p>
+                    ${coverHTML}
 
+                    <span class="status">
 
-                <div>
-                    ${genresHTML}
+                        ${escapeHTML(
+                            statusNames[
+                                work.status
+                            ] ||
+                            work.status
+                        )}
+
+                    </span>
+
                 </div>
 
 
-                <a
-                    class="read"
-                    href="${enc(work.file)}"
-                >
-                    عرض العمل
-                </a>
+                <div class="work-info">
 
-            </div>
-        `;
+                    <h3>
+                        ${escapeHTML(
+                            work.title
+                        )}
+                    </h3>
 
 
-        worksEl.appendChild(card);
-    });
+                    <p class="description">
+
+                        ${escapeHTML(
+                            work.description
+                        )}
+
+                    </p>
+
+
+                    <div class="genres">
+
+                        ${genresHTML}
+
+                    </div>
+
+
+                    <a
+                        class="read"
+                        href="/${encodePath(work.file)}"
+                    >
+                        عرض العمل
+                    </a>
+
+                </div>
+
+            `;
+
+
+            worksEl.appendChild(
+                card
+            );
+        }
+    );
 }
 
 
@@ -667,18 +1331,22 @@ function render() {
    SEARCH
 ========================================================= */
 
-search.addEventListener(
-    "input",
-    event => {
+if (searchEl) {
 
-        q =
-            event.target.value
-                .toLowerCase()
-                .trim();
+    searchEl.addEventListener(
+        "input",
+        event => {
 
-        render();
-    }
-);
+            searchQuery =
+                event.target.value
+                    .toLowerCase()
+                    .trim();
+
+
+            render();
+        }
+    );
+}
 
 
 /* =========================================================
@@ -687,33 +1355,121 @@ search.addEventListener(
 
 document
     .querySelectorAll(".filter")
-    .forEach(button => {
+    .forEach(
+        button => {
 
-        button.onclick = () => {
+            button.addEventListener(
+                "click",
+                () => {
 
-            document
-                .querySelectorAll(".filter")
-                .forEach(item =>
-                    item.classList.remove("active")
-                );
+                    document
+                        .querySelectorAll(
+                            ".filter"
+                        )
+                        .forEach(
+                            item =>
+                                item.classList
+                                    .remove(
+                                        "active"
+                                    )
+                        );
 
 
-            button.classList.add(
-                "active"
+                    button.classList.add(
+                        "active"
+                    );
+
+
+                    currentStatus =
+                        button.dataset.status ||
+                        "all";
+
+
+                    render();
+                }
             );
-
-
-            status =
-                button.dataset.status;
-
-
-            render();
-        };
-    });
+        }
+    );
 
 
 /* =========================================================
    START
+========================================================= */
+
+async function init() {
+
+    try {
+
+        /*
+           رسالة مؤقتة
+        */
+
+        if (worksEl) {
+
+            worksEl.innerHTML = `
+
+                <div class="empty">
+
+                    جاري تحميل الأعمال...
+
+                </div>
+
+            `;
+        }
+
+
+        works =
+            await loadWorks();
+
+
+        /*
+           ترتيب الأعمال أبجدياً
+        */
+
+        works.sort(
+            (a, b) =>
+                a.title.localeCompare(
+                    b.title,
+                    "ar"
+                )
+        );
+
+
+        render();
+
+
+    } catch (error) {
+
+        console.error(
+            "MangaX:",
+            error
+        );
+
+
+        if (worksEl) {
+
+            worksEl.innerHTML = `
+
+                <div class="empty">
+
+                    تعذر تحميل الأعمال حالياً.
+
+                    <br>
+
+                    <small>
+                        حاول تحديث الصفحة.
+                    </small>
+
+                </div>
+
+            `;
+        }
+    }
+}
+
+
+/* =========================================================
+   RUN
 ========================================================= */
 
 init();
