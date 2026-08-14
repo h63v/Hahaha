@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Moms Friends | MangaX</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(139,92,246,.16),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at bottom left,
+            rgba(79,70,229,.08),
+            transparent 30%
+        ),
+        #08070b;
+
+    color: #fff;
+
+    font-family:
+        Arial,
+        Tahoma,
+        sans-serif;
+}
+
+.container {
+    width: min(1100px, 92%);
+    margin: auto;
+}
+
+/* HEADER */
+
+.header {
+    padding: 25px 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.06);
+}
+
+.logo {
+    color: #a855f7;
+
+    font-size: 25px;
+
+    font-weight: 900;
+
+    text-decoration: none;
+}
+
+.home {
+    color: #aaa8b4;
+
+    text-decoration: none;
+
+    transition: .2s;
+}
+
+.home:hover {
+    color: #c084fc;
+}
+
+/* WORK */
+
+.work {
+    padding: 45px 0;
+}
+
+.hero {
+    display: grid;
+
+    grid-template-columns: 280px 1fr;
+
+    gap: 40px;
+
+    align-items: start;
+}
+
+/* COVER */
+
+.cover {
+    width: 100%;
+
+    aspect-ratio: 2 / 3;
+
+    overflow: hidden;
+
+    border-radius: 22px;
+
+    background: #15141b;
+
+    border:
+        1px solid
+        rgba(168,85,247,.35);
+
+    box-shadow:
+        0 20px 70px
+        rgba(0,0,0,.5);
+}
+
+.cover img {
+    display: block;
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+}
+
+/* INFO */
+
+.info {
+    padding-top: 5px;
+}
+
+.status {
+    display: inline-block;
+
+    padding: 8px 15px;
+
+    border-radius: 10px;
+
+    margin-bottom: 16px;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    background:
+        rgba(34,197,94,.14);
+
+    border:
+        1px solid
+        rgba(34,197,94,.3);
+
+    color: #4ade80;
+}
+
+h1 {
+    margin: 0 0 18px;
+
+    font-size:
+        clamp(32px,5vw,52px);
+
+    line-height: 1.2;
+}
+
+.description {
+    color: #aaa8b4;
+
+    line-height: 2;
+
+    font-size: 17px;
+
+    margin: 0;
+}
+
+/* GENRES */
+
+.genres {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 22px;
+}
+
+.genre {
+    padding: 8px 14px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(139,92,246,.12);
+
+    border:
+        1px solid
+        rgba(139,92,246,.2);
+
+    color: #c4b5fd;
+
+    font-size: 14px;
+}
+
+/* CHAPTERS */
+
+.chapter-section {
+    margin-top: 50px;
+}
+
+.section-title {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 18px;
+}
+
+.section-title h2 {
+    margin: 0;
+
+    font-size: 25px;
+}
+
+.chapter-count {
+    color: #8d8998;
+
+    font-size: 14px;
+}
+
+.chapters {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.chapter {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 18px 20px;
+
+    border-radius: 15px;
+
+    background: #121118;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    color: #fff;
+
+    text-decoration: none;
+
+    transition:
+        transform .2s,
+        background .2s,
+        border-color .2s;
+}
+
+.chapter:hover {
+    transform: translateY(-2px);
+
+    background: #181620;
+
+    border-color:
+        rgba(168,85,247,.45);
+}
+
+.chapter-name {
+    font-weight: 700;
+}
+
+.chapter-number {
+    color: #a855f7;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+/* FOOTER */
+
+.footer {
+    padding: 40px 0;
+
+    text-align: center;
+
+    color: #66636f;
+
+    font-size: 13px;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    .hero {
+        grid-template-columns: 1fr;
+
+        gap: 25px;
+    }
+
+    .cover {
+        width: 230px;
+
+        margin: auto;
+    }
+
+    .info {
+        text-align: center;
+    }
+
+    .genres {
+        justify-content: center;
+    }
+
+    .chapter {
+        padding: 16px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<header class="header">
+
+<a class="logo" href="/">
+    MangaX
+</a>
+
+<a class="home" href="/">
+    الرئيسية
+</a>
+
+</header>
+
+
+<main class="work">
+
+<section class="hero">
+
+
+<!-- الغلاف -->
+
+<div class="cover">
+
+<img
+    src="https://b.top4top.io/p_3878uxxge1.jpg"
+    alt="Moms Friends"
+>
+
+</div>
+
+
+<!-- معلومات العمل -->
+
+<div class="info">
+
+<div class="status">
+    مستمر
+</div>
+
+<h1>
+    Moms Friends
+</h1>
+
+<p class="description">
+    قصة Moms Friends
+</p>
+
+
+<!-- التصنيفات -->
+
+<div class="genres">
+
+<span class="genre">
+    دراما
+</span>
+
+<span class="genre">
+    رومانسي
+</span>
+
+<span class="genre">
+    ميلف
+</span>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- الفصول -->
+
+<section class="chapter-section">
+
+<div class="section-title">
+
+<h2>
+    الفصول
+</h2>
+
+<span class="chapter-count">
+    27 فصل
+</span>
+
+</div>
+
+
+<div class="chapters">
+
+
+<a class="chapter"
+   href="moms-friends-chapter-27.html">
+
+<span class="chapter-name">
+    الفصل 27
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-26.html">
+
+<span class="chapter-name">
+    الفصل 26
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-25.html">
+
+<span class="chapter-name">
+    الفصل 25
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-24.html">
+
+<span class="chapter-name">
+    الفصل 24
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-23.html">
+
+<span class="chapter-name">
+    الفصل 23
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-22.html">
+
+<span class="chapter-name">
+    الفصل 22
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-21.html">
+
+<span class="chapter-name">
+    الفصل 21
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-20.html">
+
+<span class="chapter-name">
+    الفصل 20
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-19.html">
+
+<span class="chapter-name">
+    الفصل 19
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-18.html">
+
+<span class="chapter-name">
+    الفصل 18
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-17.html">
+
+<span class="chapter-name">
+    الفصل 17
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-16.html">
+
+<span class="chapter-name">
+    الفصل 16
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-15.html">
+
+<span class="chapter-name">
+    الفصل 15
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-14.html">
+
+<span class="chapter-name">
+    الفصل 14
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-13.html">
+
+<span class="chapter-name">
+    الفصل 13
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-12.html">
+
+<span class="chapter-name">
+    الفصل 12
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-11.html">
+
+<span class="chapter-name">
+    الفصل 11
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-10.html">
+
+<span class="chapter-name">
+    الفصل 10
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-9.html">
+
+<span class="chapter-name">
+    الفصل 9
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-8.html">
+
+<span class="chapter-name">
+    الفصل 8
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-7.html">
+
+<span class="chapter-name">
+    الفصل 7
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-6.html">
+
+<span class="chapter-name">
+    الفصل 6
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-5.html">
+
+<span class="chapter-name">
+    الفصل 5
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-4.html">
+
+<span class="chapter-name">
+    الفصل 4
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-3.html">
+
+<span class="chapter-name">
+    الفصل 3
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-2.html">
+
+<span class="chapter-name">
+    الفصل 2
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+<a class="chapter"
+   href="moms-friends-chapter-1.html">
+
+<span class="chapter-name">
+    الفصل 1
+</span>
+
+<span class="chapter-number">
+    قراءة ←
+</span>
+
+</a>
+
+
+</div>
+
+</section>
+
+</main>
+
+
+<footer class="footer">
+
+MangaX © 2026
+
+</footer>
+
+</div>
+
+</body>
+
+</html>
