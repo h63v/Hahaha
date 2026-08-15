@@ -9,6 +9,11 @@ let works = [];
 let currentStatus = "all";
 let searchQuery = "";
 
+
+/* =========================================================
+   STATUS NAMES
+========================================================= */
+
 const statusNames = {
     ongoing: "مستمر",
     completed: "مكتمل",
@@ -21,6 +26,7 @@ const statusNames = {
 ========================================================= */
 
 function escapeHTML(value) {
+
     return String(value ?? "")
         .replace(/[&<>"']/g, char => ({
             "&": "&amp;",
@@ -32,26 +38,53 @@ function escapeHTML(value) {
 }
 
 
-function encodePath(path) {
-    return path
+function encodePath(value) {
+
+    return String(value ?? "")
         .split("/")
         .map(part => encodeURIComponent(part))
         .join("/");
 }
 
 
+/* =========================================================
+   WORK URL
+========================================================= */
+
 function getWorkURL(work) {
-    return `/manga/${encodeURIComponent(work.slug)}/${encodeURIComponent(work.file)}`;
-}
 
-
-function getChapterURL(work, number) {
-    return `/manga/${encodeURIComponent(work.slug)}/${encodeURIComponent(work.slug)}-chapter-${number}.html`;
+    return (
+        `/manga/` +
+        `${encodeURIComponent(work.slug)}/` +
+        `${encodeURIComponent(work.file)}`
+    );
 }
 
 
 /* =========================================================
-   LOAD INDEX
+   CHAPTER URL
+========================================================= */
+
+function getChapterURL(
+    work,
+    number
+) {
+
+    return (
+        `/manga/` +
+        `${encodeURIComponent(work.slug)}/` +
+        `${encodeURIComponent(
+            work.slug +
+            "-chapter-" +
+            number +
+            ".html"
+        )}`
+    );
+}
+
+
+/* =========================================================
+   LOAD INDEX.JSON
 ========================================================= */
 
 async function loadIndex() {
@@ -63,19 +96,29 @@ async function loadIndex() {
         }
     );
 
+
     if (!response.ok) {
+
         throw new Error(
             `تعذر تحميل index.json (${response.status})`
         );
     }
 
-    const data = await response.json();
 
-    if (!data || !Array.isArray(data.works)) {
+    const data =
+        await response.json();
+
+
+    if (
+        !data ||
+        !Array.isArray(data.works)
+    ) {
+
         throw new Error(
             "صيغة index.json غير صحيحة."
         );
     }
+
 
     return data.works;
 }
@@ -87,66 +130,96 @@ async function loadIndex() {
 
 function normalizeWork(work) {
 
+    const slug =
+        String(
+            work.slug || ""
+        ).trim();
+
+
+    const title =
+        String(
+            work.title ||
+            slug ||
+            "عمل بدون اسم"
+        ).trim();
+
+
+    const file =
+        String(
+            work.file ||
+            `${slug}.html`
+        ).trim();
+
+
+    const cover =
+        String(
+            work.cover || ""
+        ).trim();
+
+
+    const description =
+        String(
+            work.description ||
+            "لم تتم إضافة قصة بعد"
+        ).trim();
+
+
+    const genres =
+        Array.isArray(work.genres)
+
+            ? work.genres
+                .map(
+                    genre =>
+                        String(
+                            genre
+                        ).trim()
+                )
+                .filter(Boolean)
+
+            : [];
+
+
     return {
 
-        slug:
-            String(work.slug || "").trim(),
+        slug,
 
-        title:
-            String(
-                work.title ||
-                work.slug ||
-                "عمل بدون اسم"
-            ).trim(),
+        title,
 
-        file:
-            String(
-                work.file ||
-                `${work.slug}.html`
-            ).trim(),
+        file,
 
-        cover:
-            String(
-                work.cover || ""
-            ).trim(),
+        cover,
 
-        description:
-            String(
-                work.description ||
-                "لم تتم إضافة قصة بعد"
-            ).trim(),
+        description,
 
-        genres:
-            Array.isArray(work.genres)
-                ? work.genres
-                    .map(x => String(x).trim())
-                    .filter(Boolean)
-                : [],
+        genres,
 
         status:
-            normalizeStatus(work.status),
+            normalizeStatus(
+                work.status
+            ),
 
         chapters:
-            normalizeChapters(work)
-
+            normalizeChapters(
+                work
+            )
     };
 }
 
 
 /* =========================================================
-   CHAPTERS
+   NORMALIZE CHAPTERS
 ========================================================= */
 
 function normalizeChapters(work) {
 
     /*
-       إذا index.json يحتوي:
+        الحالة الأولى:
 
-       "chapters": 27
+        "chapters": 27
 
-       ننشئ:
+        تصبح:
 
-       1 -> 27
+        [27, 26, 25 ... 1]
     */
 
     if (
@@ -156,49 +229,89 @@ function normalizeChapters(work) {
         const total =
             Math.max(
                 0,
-                Math.floor(work.chapters)
+                Math.floor(
+                    work.chapters
+                )
             );
 
+
         return Array.from(
-            { length: total },
-            (_, index) => index + 1
+            {
+                length: total
+            },
+            (_, index) =>
+                total - index
         );
     }
 
 
     /*
-       إذا كان chapters مصفوفة:
+        الحالة الثانية:
 
-       "chapters": [1,2,3]
+        "chapters": [1, 2, 3, 10, 20]
+
+        أو:
+
+        "chapters": [
+            {"number": 1},
+            {"number": 2}
+        ]
     */
 
     if (
-        Array.isArray(work.chapters)
+        Array.isArray(
+            work.chapters
+        )
     ) {
 
-        return work.chapters
-            .map(chapter => {
+        const numbers =
+            work.chapters
+                .map(chapter => {
 
-                if (
-                    typeof chapter === "object" &&
-                    chapter !== null
-                ) {
+                    if (
+                        typeof chapter ===
+                        "object" &&
+                        chapter !== null
+                    ) {
+
+                        return Number(
+                            chapter.number
+                        );
+                    }
+
 
                     return Number(
-                        chapter.number
+                        chapter
                     );
-                }
+                })
+                .filter(
+                    number =>
+                        Number.isFinite(
+                            number
+                        ) &&
+                        number > 0
+                );
 
-                return Number(chapter);
-            })
-            .filter(
-                number =>
-                    Number.isFinite(number) &&
-                    number > 0
-            )
-            .sort(
-                (a, b) => b - a
-            );
+
+        /*
+            إزالة التكرار
+        */
+
+        const unique =
+            [...new Set(numbers)];
+
+
+        /*
+            ترتيب من الأكبر
+            إلى الأصغر
+        */
+
+        unique.sort(
+            (a, b) => b - a
+        );
+
+
+        return unique;
     }
 
 
@@ -213,25 +326,32 @@ function normalizeChapters(work) {
 function normalizeStatus(status) {
 
     const value =
-        String(status || "")
-            .trim()
-            .toLowerCase();
+        String(
+            status || ""
+        )
+        .trim()
+        .toLowerCase();
+
 
     if (
         value === "completed" ||
         value === "complete" ||
         value === "مكتمل"
     ) {
+
         return "completed";
     }
+
 
     if (
         value === "paused" ||
         value === "stopped" ||
         value === "متوقف"
     ) {
+
         return "paused";
     }
+
 
     return "ongoing";
 }
@@ -243,6 +363,10 @@ function normalizeStatus(status) {
 
 function renderCover(work) {
 
+    /*
+        إذا ما عنده غلاف
+    */
+
     if (!work.cover) {
 
         return `
@@ -253,6 +377,10 @@ function renderCover(work) {
     }
 
 
+    /*
+        إذا عنده غلاف
+    */
+
     return `
         <img
             src="${escapeHTML(work.cover)}"
@@ -260,7 +388,8 @@ function renderCover(work) {
             loading="lazy"
             onerror="
                 this.onerror=null;
-                this.src='https://placehold.co/600x850/15151e/8b5cf6?text=MangaX';
+                this.parentElement.innerHTML =
+                '<div class=&quot;no-cover&quot;><span>MangaX</span></div>';
             "
         >
     `;
@@ -278,18 +407,24 @@ function render() {
     }
 
 
+    /*
+        فلترة الأعمال
+    */
+
     const filtered =
         works.filter(work => {
 
             const matchesStatus =
                 currentStatus === "all" ||
-                work.status === currentStatus;
+                work.status ===
+                currentStatus;
 
 
             const searchText =
                 [
                     work.title,
                     work.description,
+                    work.slug,
                     ...work.genres
                 ]
                 .join(" ")
@@ -309,12 +444,20 @@ function render() {
         });
 
 
+    /*
+        عدد الأعمال
+    */
+
     if (countEl) {
 
         countEl.textContent =
             `${filtered.length} عمل`;
     }
 
+
+    /*
+        حالة عدم وجود أعمال
+    */
 
     if (emptyEl) {
 
@@ -326,26 +469,56 @@ function render() {
     worksEl.innerHTML = "";
 
 
+    /*
+        لا توجد نتائج
+    */
+
+    if (!filtered.length) {
+
+        if (emptyEl) {
+            emptyEl.hidden = false;
+        }
+
+        return;
+    }
+
+
+    /*
+        إنشاء البطاقات
+    */
+
     filtered.forEach(work => {
 
         const card =
-            document.createElement("article");
+            document.createElement(
+                "article"
+            );
 
 
         card.className = "work";
 
+
+        /*
+            التصنيفات
+        */
 
         const genresHTML =
             work.genres
                 .map(
                     genre => `
                         <span class="genre">
-                            ${escapeHTML(genre)}
+                            ${escapeHTML(
+                                genre
+                            )}
                         </span>
                     `
                 )
                 .join("");
 
+
+        /*
+            آخر فصل
+        */
 
         const latestChapter =
             work.chapters.length
@@ -353,11 +526,19 @@ function render() {
                 : null;
 
 
+        /*
+            نص الفصل
+        */
+
         const chapterText =
-            latestChapter
+            latestChapter !== null
                 ? `الفصل ${latestChapter}`
                 : "لا توجد فصول";
 
+
+        /*
+            البطاقة
+        */
 
         card.innerHTML = `
 
@@ -370,7 +551,8 @@ function render() {
                     ${escapeHTML(
                         statusNames[
                             work.status
-                        ] || "مستمر"
+                        ] ||
+                        "مستمر"
                     )}
 
                 </span>
@@ -412,8 +594,10 @@ function render() {
                         عرض العمل
                     </a>
 
+
                     ${
-                        latestChapter
+                        latestChapter !== null
+
                             ? `
                                 <a
                                     class="latest"
@@ -422,20 +606,24 @@ function render() {
                                         latestChapter
                                     )}"
                                 >
-                                    ${chapterText}
+                                    ${escapeHTML(
+                                        chapterText
+                                    )}
                                 </a>
                               `
+
                             : ""
                     }
 
                 </div>
 
             </div>
-
         `;
 
 
-        worksEl.appendChild(card);
+        worksEl.appendChild(
+            card
+        );
     });
 }
 
@@ -451,9 +639,13 @@ if (searchEl) {
         event => {
 
             searchQuery =
-                event.target.value
-                    .toLowerCase()
-                    .trim();
+                String(
+                    event.target.value ||
+                    ""
+                )
+                .toLowerCase()
+                .trim();
+
 
             render();
         }
@@ -473,21 +665,36 @@ document
             "click",
             () => {
 
+                /*
+                    إزالة active
+                    من جميع الأزرار
+                */
+
                 document
-                    .querySelectorAll(".filter")
+                    .querySelectorAll(
+                        ".filter"
+                    )
                     .forEach(item => {
 
                         item.classList.remove(
                             "active"
                         );
-
                     });
 
+
+                /*
+                    إضافة active
+                    للزر الحالي
+                */
 
                 button.classList.add(
                     "active"
                 );
 
+
+                /*
+                    تحديد الحالة
+                */
 
                 currentStatus =
                     button.dataset.status ||
@@ -498,6 +705,56 @@ document
             }
         );
     });
+
+
+/* =========================================================
+   AUTO REFRESH
+========================================================= */
+
+/*
+    نعيد قراءة index.json
+    كل 30 ثانية.
+
+    هذا مفيد إذا أضفت عملًا جديدًا
+    أو عدلت عدد الفصول في GitHub.
+
+    بدون الحاجة إلى تحديث الصفحة يدويًا.
+*/
+
+setInterval(
+    async () => {
+
+        try {
+
+            const data =
+                await loadIndex();
+
+
+            works =
+                data
+                    .map(
+                        normalizeWork
+                    )
+                    .filter(
+                        work =>
+                            work.slug &&
+                            work.file
+                    );
+
+
+            render();
+
+        } catch (error) {
+
+            console.error(
+                "MangaX auto refresh:",
+                error
+            );
+        }
+
+    },
+    30000
+);
 
 
 /* =========================================================
@@ -522,19 +779,34 @@ async function init() {
         }
 
 
+        /*
+            تحميل index.json
+        */
+
         const data =
             await loadIndex();
 
 
+        /*
+            تحويل البيانات
+            إلى صيغة موحدة
+        */
+
         works =
             data
-                .map(normalizeWork)
+                .map(
+                    normalizeWork
+                )
                 .filter(
                     work =>
                         work.slug &&
                         work.file
                 );
 
+
+        /*
+            عرض الأعمال
+        */
 
         render();
 
@@ -570,5 +842,9 @@ async function init() {
     }
 }
 
+
+/* =========================================================
+   START
+========================================================= */
 
 init();
