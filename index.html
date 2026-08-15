@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PlayBoy | عالم المانجا</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- تأثيرات الخلفية -->
+    <div class="background-effects">
+        <div class="neon-line line-one"></div>
+        <div class="neon-line line-two"></div>
+        <div class="neon-line line-three"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header">
+
+        <div class="container nav">
+
+            <a href="#" class="brand">
+
+                <div class="rabbit-logo">
+                    <span class="ear ear-right"></span>
+                    <span class="ear ear-left"></span>
+                    <span class="rabbit-face">
+                        <span class="eye eye-right"></span>
+                        <span class="eye eye-left"></span>
+                        <span class="nose"></span>
+                    </span>
+                </div>
+
+                <div class="brand-name">
+                    <strong>Play<span>Boy</span></strong>
+                    <small>MANGA</small>
+                </div>
+
+            </a>
+
+
+            <nav class="desktop-nav">
+
+                <a class="active" href="#home">الرئيسية</a>
+                <a href="#latest">الأحدث</a>
+                <a href="#popular">الأكثر قراءة</a>
+                <a href="#categories">التصنيفات</a>
+
+            </nav>
+
+
+            <div class="nav-actions">
+
+                <button
+                    class="theme-btn"
+                    id="themeButton"
+                    onclick="toggleTheme()"
+                    aria-label="تغيير المظهر">
+                    ☀
+                </button>
+
+                <button
+                    class="menu-btn"
+                    onclick="toggleMenu()">
+                    ☰
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu" id="mobileMenu">
+
+        <a href="#home" onclick="toggleMenu()">الرئيسية</a>
+        <a href="#latest" onclick="toggleMenu()">الأحدث</a>
+        <a href="#popular" onclick="toggleMenu()">الأكثر قراءة</a>
+        <a href="#categories" onclick="toggleMenu()">التصنيفات</a>
+
+    </div>
+
+
+    <!-- HERO -->
+    <main>
+
+        <section class="hero" id="home">
+
+            <div class="hero-glow"></div>
+
+            <div class="container hero-content">
+
+                <div class="hero-text">
+
+                    <div class="eyebrow">
+                        <span></span>
+                        PLAYBOY MANGA
+                        <span></span>
+                    </div>
+
+                    <h1>
+                        عالم المانجا
+                        <strong>بطابع مختلف.</strong>
+                    </h1>
+
+                    <p>
+                        اكتشف عالماً من القصص، الشخصيات والمغامرات.
+                        تابع أحدث الأعمال واقرأ فصولك المفضلة
+                        بتجربة عصرية وسريعة.
+                    </p>
+
+                    <div class="hero-buttons">
+
+                        <a href="#latest" class="gold-btn">
+                            <span>استكشف الآن</span>
+                            <b>←</b>
+                        </a>
+
+                        <a href="#popular" class="outline-btn">
+                            الأكثر قراءة
+                        </a>
+
+                    </div>
+
+                    <div class="hero-stats">
+
+                        <div>
+                            <strong>+500</strong>
+                            <span>عمل</span>
+                        </div>
+
+                        <div>
+                            <strong>+10K</strong>
+                            <span>فصل</span>
+                        </div>
+
+                        <div>
+                            <strong>24/7</strong>
+                            <span>متاح دائماً</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="hero-rabbit">
+
+                    <div class="rabbit-ring ring-one"></div>
+                    <div class="rabbit-ring ring-two"></div>
+
+                    <div class="big-rabbit">
+
+                        <div class="big-ear left"></div>
+                        <div class="big-ear right"></div>
+
+                        <div class="big-face">
+
+                            <div class="big-eye left-eye"></div>
+                            <div class="big-eye right-eye"></div>
+
+                            <div class="big-nose"></div>
+
+                            <div class="mouth"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="rabbit-text">
+                        PLAYBOY
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- SEARCH -->
+        <section class="search-section">
+
+            <div class="container">
+
+                <div class="search-box">
+
+                    <span class="search-icon">⌕</span>
+
+                    <input
+                        id="searchInput"
+                        type="text"
+                        placeholder="ابحث عن اسم المانجا..."
+                        oninput="searchManga()"
+                    >
+
+                    <kbd>CTRL K</kbd>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- LATEST -->
+        <section class="section" id="latest">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <div class="section-label">
+                            NEW RELEASES
+                        </div>
+
+                        <h2>
+                            أحدث <span>الأعمال</span>
+                        </h2>
+
+                    </div>
+
+                    <a href="#" class="view-all">
+                        عرض الكل
+                        <b>←</b>
+                    </a>
+
+                </div>
+
+
+                <div
+                    class="manga-grid"
+                    id="mangaGrid">
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- POPULAR -->
+        <section class="section popular-section" id="popular">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <div class="section-label">
+                            TRENDING NOW
+                        </div>
+
+                        <h2>
+                            الأكثر <span>قراءة</span>
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="manga-grid"
+                    id="popularGrid">
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CATEGORIES -->
+        <section class="section categories-section" id="categories">
+
+            <div class="container">
+
+                <div class="section-heading centered">
+
+                    <div>
+
+                        <div class="section-label">
+                            EXPLORE
+                        </div>
+
+                        <h2>
+                            تصفح حسب <span>التصنيف</span>
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="categories">
+
+                    <button onclick="filterCategory('أكشن')">
+                        <span>⚔</span>
+                        أكشن
+                    </button>
+
+                    <button onclick="filterCategory('رومانسي')">
+                        <span>♡</span>
+                        رومانسي
+                    </button>
+
+                    <button onclick="filterCategory('فانتازيا')">
+                        <span>✦</span>
+                        فانتازيا
+                    </button>
+
+                    <button onclick="filterCategory('مغامرة')">
+                        <span>♢</span>
+                        مغامرة
+                    </button>
+
+                    <button onclick="filterCategory('دراما')">
+                        <span>◈</span>
+                        دراما
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        <div class="container footer">
+
+            <div class="footer-brand">
+
+                <div class="footer-rabbit">♞</div>
+
+                <div>
+                    <strong>Play<span>Boy</span></strong>
+                    <small>MANGA</small>
+                </div>
+
+            </div>
+
+            <p>
+                عالمك الخاص للمانجا.
+            </p>
+
+            <div class="footer-line"></div>
+
+            <small>
+                © 2026 PlayBoy Manga — جميع الحقوق محفوظة
+            </small>
+
+        </div>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
