@@ -38,12 +38,19 @@ function escapeHTML(value) {
 }
 
 
-function encodePath(value) {
+/*
+    تشفير جزء من الرابط فقط.
+    يدعم العربي مثل:
 
-    return String(value ?? "")
-        .split("/")
-        .map(part => encodeURIComponent(part))
-        .join("/");
+    فصل-سري
+    فصل-سري-chapter-310.html
+*/
+
+function encodePart(value) {
+
+    return encodeURIComponent(
+        String(value ?? "")
+    );
 }
 
 
@@ -53,10 +60,22 @@ function encodePath(value) {
 
 function getWorkURL(work) {
 
+    const slug =
+        String(
+            work.slug || ""
+        ).trim();
+
+    const file =
+        String(
+            work.file ||
+            `${slug}.html`
+        ).trim();
+
+
     return (
         `/manga/` +
-        `${encodeURIComponent(work.slug)}/` +
-        `${encodeURIComponent(work.file)}`
+        `${encodePart(slug)}/` +
+        `${encodePart(file)}`
     );
 }
 
@@ -70,15 +89,39 @@ function getChapterURL(
     number
 ) {
 
+    const slug =
+        String(
+            work.slug || ""
+        ).trim();
+
+
+    const chapterNumber =
+        String(number).trim();
+
+
+    /*
+        اسم ملف الفصل:
+
+        فصل-سري-chapter-1.html
+
+        فصل-سري-chapter-310.html
+    */
+
+    const filename =
+        `${slug}-chapter-${chapterNumber}.html`;
+
+
+    /*
+        الرابط:
+
+        /manga/فصل-سري/
+        فصل-سري-chapter-310.html
+    */
+
     return (
         `/manga/` +
-        `${encodeURIComponent(work.slug)}/` +
-        `${encodeURIComponent(
-            work.slug +
-            "-chapter-" +
-            number +
-            ".html"
-        )}`
+        `${encodePart(slug)}/` +
+        `${encodePart(filename)}`
     );
 }
 
@@ -89,12 +132,13 @@ function getChapterURL(
 
 async function loadIndex() {
 
-    const response = await fetch(
-        `${INDEX_URL}?v=${Date.now()}`,
-        {
-            cache: "no-store"
-        }
-    );
+    const response =
+        await fetch(
+            `${INDEX_URL}?v=${Date.now()}`,
+            {
+                cache: "no-store"
+            }
+        );
 
 
     if (!response.ok) {
@@ -129,6 +173,15 @@ async function loadIndex() {
 ========================================================= */
 
 function normalizeWork(work) {
+
+    if (
+        !work ||
+        typeof work !== "object"
+    ) {
+
+        return null;
+    }
+
 
     const slug =
         String(
@@ -165,7 +218,9 @@ function normalizeWork(work) {
 
 
     const genres =
-        Array.isArray(work.genres)
+        Array.isArray(
+            work.genres
+        )
 
             ? work.genres
                 .map(
@@ -213,13 +268,17 @@ function normalizeWork(work) {
 function normalizeChapters(work) {
 
     /*
-        الحالة الأولى:
+        إذا كان:
 
-        "chapters": 27
+        "chapters": 310
 
-        تصبح:
+        يتم إنشاء:
 
-        [27, 26, 25 ... 1]
+        310
+        309
+        308
+        ...
+        1
     */
 
     if (
@@ -246,15 +305,14 @@ function normalizeChapters(work) {
 
 
     /*
-        الحالة الثانية:
+        إذا كان chapters مصفوفة:
 
-        "chapters": [1, 2, 3, 10, 20]
-
-        أو:
-
-        "chapters": [
-            {"number": 1},
-            {"number": 2}
+        [
+            1,
+            2,
+            3,
+            ...
+            310
         ]
     */
 
@@ -266,35 +324,39 @@ function normalizeChapters(work) {
 
         const numbers =
             work.chapters
-                .map(chapter => {
+                .map(
+                    chapter => {
 
-                    if (
-                        typeof chapter ===
-                        "object" &&
-                        chapter !== null
-                    ) {
+                        if (
+                            typeof chapter ===
+                                "object"
+                            &&
+                            chapter !== null
+                        ) {
+
+                            return Number(
+                                chapter.number
+                            );
+                        }
+
 
                         return Number(
-                            chapter.number
+                            chapter
                         );
                     }
-
-
-                    return Number(
-                        chapter
-                    );
-                })
+                )
                 .filter(
                     number =>
                         Number.isFinite(
                             number
-                        ) &&
+                        )
+                        &&
                         number > 0
                 );
 
 
         /*
-            إزالة التكرار
+            حذف التكرار
         */
 
         const unique =
@@ -363,10 +425,6 @@ function normalizeStatus(status) {
 
 function renderCover(work) {
 
-    /*
-        إذا ما عنده غلاف
-    */
-
     if (!work.cover) {
 
         return `
@@ -376,10 +434,6 @@ function renderCover(work) {
         `;
     }
 
-
-    /*
-        إذا عنده غلاف
-    */
 
     return `
         <img
@@ -408,40 +462,42 @@ function render() {
 
 
     /*
-        فلترة الأعمال
+        فلترة الأعمال حسب الحالة والبحث
     */
 
     const filtered =
-        works.filter(work => {
+        works.filter(
+            work => {
 
-            const matchesStatus =
-                currentStatus === "all" ||
-                work.status ===
-                currentStatus;
-
-
-            const searchText =
-                [
-                    work.title,
-                    work.description,
-                    work.slug,
-                    ...work.genres
-                ]
-                .join(" ")
-                .toLowerCase();
+                const matchesStatus =
+                    currentStatus === "all" ||
+                    work.status ===
+                        currentStatus;
 
 
-            const matchesSearch =
-                searchText.includes(
-                    searchQuery
+                const searchText =
+                    [
+                        work.title,
+                        work.description,
+                        work.slug,
+                        ...work.genres
+                    ]
+                    .join(" ")
+                    .toLowerCase();
+
+
+                const matchesSearch =
+                    searchText.includes(
+                        searchQuery
+                    );
+
+
+                return (
+                    matchesStatus &&
+                    matchesSearch
                 );
-
-
-            return (
-                matchesStatus &&
-                matchesSearch
-            );
-        });
+            }
+        );
 
 
     /*
@@ -456,7 +512,7 @@ function render() {
 
 
     /*
-        حالة عدم وجود أعمال
+        إخفاء / إظهار رسالة عدم وجود نتائج
     */
 
     if (emptyEl) {
@@ -465,6 +521,10 @@ function render() {
             filtered.length !== 0;
     }
 
+
+    /*
+        تنظيف القائمة
+    */
 
     worksEl.innerHTML = "";
 
@@ -475,156 +535,182 @@ function render() {
 
     if (!filtered.length) {
 
-        if (emptyEl) {
-            emptyEl.hidden = false;
-        }
-
         return;
     }
 
 
     /*
-        إنشاء البطاقات
+        إنشاء بطاقة لكل عمل
     */
 
-    filtered.forEach(work => {
+    filtered.forEach(
+        work => {
 
-        const card =
-            document.createElement(
-                "article"
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+
+            card.className =
+                "work";
+
+
+            /*
+                التصنيفات
+            */
+
+            const genresHTML =
+                work.genres
+                    .map(
+                        genre => `
+                            <span class="genre">
+                                ${escapeHTML(
+                                    genre
+                                )}
+                            </span>
+                        `
+                    )
+                    .join("");
+
+
+            /*
+                أحدث فصل
+
+                normalizeChapters
+                يرتبها من الأكبر
+                إلى الأصغر
+            */
+
+            const latestChapter =
+                work.chapters.length
+                    ? work.chapters[0]
+                    : null;
+
+
+            /*
+                نص الفصل
+            */
+
+            const chapterText =
+                latestChapter !== null
+                    ? `الفصل ${latestChapter}`
+                    : "لا توجد فصول";
+
+
+            /*
+                رابط صفحة العمل
+            */
+
+            const workURL =
+                getWorkURL(work);
+
+
+            /*
+                رابط أحدث فصل
+            */
+
+            const latestChapterURL =
+                latestChapter !== null
+                    ? getChapterURL(
+                        work,
+                        latestChapter
+                    )
+                    : "";
+
+
+            /*
+                إنشاء البطاقة
+            */
+
+            card.innerHTML = `
+
+                <div class="cover">
+
+                    ${renderCover(work)}
+
+                    <span class="status">
+
+                        ${escapeHTML(
+                            statusNames[
+                                work.status
+                            ] ||
+                            "مستمر"
+                        )}
+
+                    </span>
+
+                </div>
+
+
+                <div class="work-info">
+
+                    <h3>
+                        ${escapeHTML(
+                            work.title
+                        )}
+                    </h3>
+
+
+                    <p class="description">
+
+                        ${escapeHTML(
+                            work.description
+                        )}
+
+                    </p>
+
+
+                    <div class="genres">
+
+                        ${genresHTML}
+
+                    </div>
+
+
+                    <div class="work-actions">
+
+                        <a
+                            class="read"
+                            href="${escapeHTML(
+                                workURL
+                            )}"
+                        >
+                            عرض العمل
+                        </a>
+
+
+                        ${
+                            latestChapter !== null
+
+                                ? `
+                                    <a
+                                        class="latest"
+                                        href="${escapeHTML(
+                                            latestChapterURL
+                                        )}"
+                                    >
+                                        ${escapeHTML(
+                                            chapterText
+                                        )}
+                                    </a>
+                                  `
+
+                                : ""
+                        }
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            worksEl.appendChild(
+                card
             );
-
-
-        card.className = "work";
-
-
-        /*
-            التصنيفات
-        */
-
-        const genresHTML =
-            work.genres
-                .map(
-                    genre => `
-                        <span class="genre">
-                            ${escapeHTML(
-                                genre
-                            )}
-                        </span>
-                    `
-                )
-                .join("");
-
-
-        /*
-            آخر فصل
-        */
-
-        const latestChapter =
-            work.chapters.length
-                ? work.chapters[0]
-                : null;
-
-
-        /*
-            نص الفصل
-        */
-
-        const chapterText =
-            latestChapter !== null
-                ? `الفصل ${latestChapter}`
-                : "لا توجد فصول";
-
-
-        /*
-            البطاقة
-        */
-
-        card.innerHTML = `
-
-            <div class="cover">
-
-                ${renderCover(work)}
-
-                <span class="status">
-
-                    ${escapeHTML(
-                        statusNames[
-                            work.status
-                        ] ||
-                        "مستمر"
-                    )}
-
-                </span>
-
-            </div>
-
-
-            <div class="work-info">
-
-                <h3>
-                    ${escapeHTML(
-                        work.title
-                    )}
-                </h3>
-
-
-                <p class="description">
-
-                    ${escapeHTML(
-                        work.description
-                    )}
-
-                </p>
-
-
-                <div class="genres">
-
-                    ${genresHTML}
-
-                </div>
-
-
-                <div class="work-actions">
-
-                    <a
-                        class="read"
-                        href="${getWorkURL(work)}"
-                    >
-                        عرض العمل
-                    </a>
-
-
-                    ${
-                        latestChapter !== null
-
-                            ? `
-                                <a
-                                    class="latest"
-                                    href="${getChapterURL(
-                                        work,
-                                        latestChapter
-                                    )}"
-                                >
-                                    ${escapeHTML(
-                                        chapterText
-                                    )}
-                                </a>
-                              `
-
-                            : ""
-                    }
-
-                </div>
-
-            </div>
-        `;
-
-
-        worksEl.appendChild(
-            card
-        );
-    });
+        }
+    );
 }
 
 
@@ -659,52 +745,97 @@ if (searchEl) {
 
 document
     .querySelectorAll(".filter")
-    .forEach(button => {
+    .forEach(
+        button => {
 
-        button.addEventListener(
-            "click",
-            () => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                /*
-                    إزالة active
-                    من جميع الأزرار
-                */
+                    /*
+                        إزالة active
+                        من جميع الأزرار
+                    */
 
-                document
-                    .querySelectorAll(
-                        ".filter"
-                    )
-                    .forEach(item => {
+                    document
+                        .querySelectorAll(
+                            ".filter"
+                        )
+                        .forEach(
+                            item => {
 
-                        item.classList.remove(
-                            "active"
+                                item.classList.remove(
+                                    "active"
+                                );
+                            }
                         );
-                    });
 
 
-                /*
-                    إضافة active
-                    للزر الحالي
-                */
+                    /*
+                        تفعيل الزر الحالي
+                    */
 
-                button.classList.add(
-                    "active"
+                    button.classList.add(
+                        "active"
+                    );
+
+
+                    /*
+                        الحالة الحالية
+                    */
+
+                    currentStatus =
+                        button.dataset.status ||
+                        "all";
+
+
+                    render();
+                }
+            );
+        }
+    );
+
+
+/* =========================================================
+   REFRESH WORKS
+========================================================= */
+
+async function refreshWorks() {
+
+    try {
+
+        const data =
+            await loadIndex();
+
+
+        const newWorks =
+            data
+                .map(
+                    normalizeWork
+                )
+                .filter(
+                    work =>
+                        work &&
+                        work.slug &&
+                        work.file
                 );
 
 
-                /*
-                    تحديد الحالة
-                */
-
-                currentStatus =
-                    button.dataset.status ||
-                    "all";
+        works =
+            newWorks;
 
 
-                render();
-            }
+        render();
+
+
+    } catch (error) {
+
+        console.error(
+            "MangaX refresh:",
+            error
         );
-    });
+    }
+}
 
 
 /* =========================================================
@@ -712,47 +843,17 @@ document
 ========================================================= */
 
 /*
-    نعيد قراءة index.json
-    كل 30 ثانية.
+    يفحص index.json كل 30 ثانية.
 
-    هذا مفيد إذا أضفت عملًا جديدًا
-    أو عدلت عدد الفصول في GitHub.
+    إذا أضفت عملًا جديدًا إلى index.json
+    سيظهر تلقائيًا بدون إعادة تحميل الصفحة.
 
-    بدون الحاجة إلى تحديث الصفحة يدويًا.
+    وإذا زاد عدد الفصول:
+    سيتم تحديث أحدث فصل تلقائيًا أيضًا.
 */
 
 setInterval(
-    async () => {
-
-        try {
-
-            const data =
-                await loadIndex();
-
-
-            works =
-                data
-                    .map(
-                        normalizeWork
-                    )
-                    .filter(
-                        work =>
-                            work.slug &&
-                            work.file
-                    );
-
-
-            render();
-
-        } catch (error) {
-
-            console.error(
-                "MangaX auto refresh:",
-                error
-            );
-        }
-
-    },
+    refreshWorks,
     30000
 );
 
@@ -783,32 +884,7 @@ async function init() {
             تحميل index.json
         */
 
-        const data =
-            await loadIndex();
-
-
-        /*
-            تحويل البيانات
-            إلى صيغة موحدة
-        */
-
-        works =
-            data
-                .map(
-                    normalizeWork
-                )
-                .filter(
-                    work =>
-                        work.slug &&
-                        work.file
-                );
-
-
-        /*
-            عرض الأعمال
-        */
-
-        render();
+        await refreshWorks();
 
 
     } catch (error) {
