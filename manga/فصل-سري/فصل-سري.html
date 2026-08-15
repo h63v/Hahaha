@@ -1,648 +1,6 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>الفصل السري | MangaX</title>
-
-<meta
-    name="description"
-    content="الفصل السري - MangaX"
->
-
-<style>
-
-* {
-    box-sizing: border-box;
-}
-
-html,
-body {
-    margin: 0;
-    padding: 0;
-}
-
-body {
-
-    min-height: 100vh;
-
-    background:
-        radial-gradient(
-            circle at top right,
-            rgba(139, 92, 246, .16),
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at bottom left,
-            rgba(168, 85, 247, .08),
-            transparent 30%
-        ),
-        #08070b;
-
-    color: #fff;
-
-    font-family:
-        Arial,
-        Tahoma,
-        sans-serif;
-}
-
-
-/* =========================================================
-   CONTAINER
-========================================================= */
-
-.container {
-
-    width: min(1100px, 92%);
-
-    margin: auto;
-}
-
-
-/* =========================================================
-   TOP
-========================================================= */
-
-.top {
-
-    padding: 35px 0 20px;
-}
-
-.back {
-
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 7px;
-
-    color: #a855f7;
-
-    text-decoration: none;
-
-    font-weight: 700;
-
-    transition: .2s;
-}
-
-.back:hover {
-
-    color: #c084fc;
-
-    transform: translateX(3px);
-}
-
-
-/* =========================================================
-   HERO
-========================================================= */
-
-.hero {
-
-    display: grid;
-
-    grid-template-columns:
-        280px 1fr;
-
-    gap: 35px;
-
-    margin-top: 25px;
-
-    align-items: start;
-}
-
-
-/* =========================================================
-   COVER
-========================================================= */
-
-.cover {
-
-    width: 100%;
-
-    aspect-ratio: 2 / 3;
-
-    overflow: hidden;
-
-    border-radius: 22px;
-
-    background: #15141b;
-
-    border:
-        1px solid
-        rgba(168, 85, 247, .35);
-
-    box-shadow:
-        0 20px 70px
-        rgba(0, 0, 0, .45);
-}
-
-.cover img {
-
-    width: 100%;
-
-    height: 100%;
-
-    object-fit: cover;
-
-    display: block;
-}
-
-.no-cover {
-
-    width: 100%;
-
-    height: 100%;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    color: #a855f7;
-
-    font-size: 30px;
-
-    font-weight: 900;
-}
-
-
-/* =========================================================
-   INFO
-========================================================= */
-
-.info {
-
-    padding: 10px 0;
-}
-
-.status {
-
-    display: inline-block;
-
-    padding: 9px 16px;
-
-    border-radius: 12px;
-
-    background: #16a34a;
-
-    color: #fff;
-
-    font-weight: 700;
-
-    margin-bottom: 15px;
-}
-
-h1 {
-
-    margin: 0 0 15px;
-
-    font-size:
-        clamp(30px, 5vw, 50px);
-
-    line-height: 1.2;
-}
-
-.description {
-
-    color: #aaa8b4;
-
-    line-height: 2;
-
-    font-size: 17px;
-
-    margin: 0;
-}
-
-
-/* =========================================================
-   GENRES
-========================================================= */
-
-.genres {
-
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 8px;
-
-    margin-top: 20px;
-}
-
-.genre {
-
-    padding: 8px 14px;
-
-    border-radius: 10px;
-
-    background:
-        rgba(139, 92, 246, .12);
-
-    border:
-        1px solid
-        rgba(139, 92, 246, .18);
-
-    color: #c49aff;
-
-    font-size: 14px;
-}
-
-
-/* =========================================================
-   SECTION
-========================================================= */
-
-.section {
-
-    margin: 50px 0;
-}
-
-.section-header {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 15px;
-
-    margin-bottom: 18px;
-}
-
-.section h2 {
-
-    margin: 0;
-
-    font-size: 26px;
-}
-
-.chapter-count {
-
-    color: #85838e;
-
-    font-size: 14px;
-}
-
-
-/* =========================================================
-   CHAPTERS
-========================================================= */
-
-.chapters {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 10px;
-}
-
-.chapter {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 15px;
-
-    padding: 18px 20px;
-
-    border-radius: 15px;
-
-    background: #121118;
-
-    border:
-        1px solid
-        rgba(255, 255, 255, .07);
-
-    color: white;
-
-    text-decoration: none;
-
-    transition:
-        transform .2s,
-        border-color .2s,
-        background .2s;
-}
-
-.chapter:hover {
-
-    transform: translateY(-2px);
-
-    border-color:
-        rgba(139, 92, 246, .5);
-
-    background: #181620;
-}
-
-.chapter-number {
-
-    font-weight: 700;
-}
-
-.chapter-read {
-
-    color: #a855f7;
-
-    font-weight: 700;
-}
-
-.empty {
-
-    padding: 25px;
-
-    text-align: center;
-
-    color: #85838e;
-
-    background: #121118;
-
-    border-radius: 15px;
-
-    border:
-        1px solid
-        rgba(255, 255, 255, .06);
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-footer {
-
-    padding: 30px 0 45px;
-
-    text-align: center;
-
-    color: #686673;
-
-    font-size: 13px;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 700px) {
-
-    .hero {
-
-        grid-template-columns: 1fr;
-
-    }
-
-    .cover {
-
-        max-width: 280px;
-
-        margin: auto;
-
-    }
-
-    h1 {
-
-        text-align: center;
-
-    }
-
-    .status {
-
-        display: block;
-
-        width: fit-content;
-
-        margin:
-            0 auto 15px;
-
-    }
-
-    .description {
-
-        text-align: center;
-
-    }
-
-    .genres {
-
-        justify-content: center;
-
-    }
-
-    .section-header {
-
-        align-items: flex-end;
-
-    }
-
-}
-
-
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
-
-@media (max-width: 420px) {
-
-    .chapter {
-
-        padding: 16px;
-
-    }
-
-    .chapter-read {
-
-        font-size: 13px;
-
-    }
-
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-
-<div class="container">
-
-
-    <!-- =====================================================
-         TOP
-    ====================================================== -->
-
-    <header class="top">
-
-        <a
-            class="back"
-            href="/"
-        >
-            ← العودة للرئيسية
-        </a>
-
-    </header>
-
-
-    <!-- =====================================================
-         WORK
-    ====================================================== -->
-
-    <section class="hero">
-
-
-        <!-- COVER -->
-
-        <div class="cover">
-
-            <img
-                src="https://a.top4top.io/p_3879l2za11.jpg"
-                alt="الفصل السري"
-                onerror="
-                    this.onerror=null;
-                    this.parentElement.innerHTML=
-                    '<div class=&quot;no-cover&quot;>MangaX</div>';
-                "
-            >
-
-        </div>
-
-
-        <!-- INFO -->
-
-        <div class="info">
-
-
-            <span class="status">
-                مستمر
-            </span>
-
-
-            <h1>
-                الفصل السري
-            </h1>
-
-
-            <p class="description">
-                الفصل السري - عمل مستمر على MangaX.
-            </p>
-
-
-            <div class="genres">
-
-                <span class="genre">
-                    حريم
-                </span>
-
-                <span class="genre">
-                    دراما
-                </span>
-
-                <span class="genre">
-                    محارم
-                </span>
-
-                <span class="genre">
-                    رومانسي
-                </span>
-
-                <span class="genre">
-                    ميلف
-                </span>
-
-                <span class="genre">
-                    مكان عام
-                </span>
-
-            </div>
-
-
-        </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         CHAPTERS
-    ====================================================== -->
-
-    <section class="section">
-
-
-        <div class="section-header">
-
-            <h2>
-                الفصول
-            </h2>
-
-            <span
-                class="chapter-count"
-                id="chapterCount"
-            >
-                جاري التحميل...
-            </span>
-
-        </div>
-
-
-        <div
-            class="chapters"
-            id="chapters"
-        >
-
-            <div class="empty">
-                جاري تحميل الفصول...
-            </div>
-
-        </div>
-
-
-    </section>
-
-
-    <!-- =====================================================
-         FOOTER
-    ====================================================== -->
-
-    <footer>
-
-        MangaX © 2026
-
-    </footer>
-
-
-</div>
-
-
-
 <script>
 
 const INDEX_URL = "/manga/index.json";
-
-
-/* =========================================================
-   مهم جدًا
-   هذا يجب أن يطابق slug الموجود في index.json
-
-   "slug": "فصل-سري"
-========================================================= */
-
-const WORK_SLUG = "فصل-سري";
 
 
 /* =========================================================
@@ -657,7 +15,7 @@ const chapterCount =
 
 
 /* =========================================================
-   ESCAPE HTML
+   HELPERS
 ========================================================= */
 
 function escapeHTML(value) {
@@ -666,15 +24,200 @@ function escapeHTML(value) {
         .replace(
             /[&<>"']/g,
             character => ({
-
                 "&": "&amp;",
                 "<": "&lt;",
                 ">": "&gt;",
                 '"': "&quot;",
                 "'": "&#039;"
-
             }[character])
         );
+
+}
+
+
+/*
+ * توحيد النص العربي قبل المقارنة
+ */
+
+function normalizeText(value) {
+
+    return String(value ?? "")
+        .trim()
+        .normalize("NFC")
+        .toLowerCase();
+
+}
+
+
+/* =========================================================
+   GET WORK FROM URL
+========================================================= */
+
+/*
+ * إذا كان الرابط مثل:
+
+   /manga/فصل-سري/فصل-سري.html
+
+ * سيأخذ:
+
+   فصل-سري
+
+ * تلقائيًا.
+ */
+
+function getSlugFromURL() {
+
+    const pathname =
+        decodeURIComponent(
+            window.location.pathname
+        );
+
+    const parts =
+        pathname
+            .split("/")
+            .filter(Boolean);
+
+
+    const mangaIndex =
+        parts.findIndex(
+            part =>
+                normalizeText(part) === "manga"
+        );
+
+
+    if (
+        mangaIndex !== -1 &&
+        parts[mangaIndex + 1]
+    ) {
+
+        return parts[mangaIndex + 1];
+
+    }
+
+
+    return "";
+
+}
+
+
+/* =========================================================
+   FIND WORK
+========================================================= */
+
+function findWork(works) {
+
+    const urlSlug =
+        normalizeText(
+            getSlugFromURL()
+        );
+
+
+    /*
+     * اسم الملف الحالي
+     */
+
+    const currentFile =
+        decodeURIComponent(
+            window.location.pathname
+                .split("/")
+                .pop() || ""
+        );
+
+
+    const normalizedFile =
+        normalizeText(
+            currentFile
+        );
+
+
+    /*
+     * 1 - البحث بالـ slug الموجود في الرابط
+     */
+
+    let work =
+        works.find(
+            item =>
+                normalizeText(
+                    item.slug
+                ) === urlSlug
+        );
+
+
+    if (work) {
+        return work;
+    }
+
+
+    /*
+     * 2 - البحث باسم الملف
+     */
+
+    work =
+        works.find(
+            item =>
+                normalizeText(
+                    item.file
+                ) === normalizedFile
+        );
+
+
+    if (work) {
+        return work;
+    }
+
+
+    /*
+     * 3 - البحث باسم العمل
+     */
+
+    work =
+        works.find(
+            item =>
+                normalizeText(
+                    item.title
+                ) === urlSlug
+        );
+
+
+    if (work) {
+        return work;
+    }
+
+
+    /*
+     * 4 - بحث إضافي:
+     * إذا كان الرابط لا يحتوي على /manga/ بالشكل المتوقع
+     */
+
+    work =
+        works.find(item => {
+
+            const slug =
+                normalizeText(
+                    item.slug
+                );
+
+            const file =
+                normalizeText(
+                    item.file
+                );
+
+            const title =
+                normalizeText(
+                    item.title
+                );
+
+
+            return (
+                slug === urlSlug ||
+                file === normalizedFile ||
+                title === urlSlug
+            );
+
+        });
+
+
+    return work || null;
 
 }
 
@@ -687,11 +230,24 @@ async function loadChapters() {
 
     try {
 
+        if (!chaptersContainer) {
+            return;
+        }
+
+
+        /*
+         * تحميل index.json بدون كاش
+         */
+
         const response =
             await fetch(
                 `${INDEX_URL}?v=${Date.now()}`,
                 {
-                    cache: "no-store"
+                    method: "GET",
+                    cache: "no-store",
+                    headers: {
+                        "Cache-Control": "no-cache"
+                    }
                 }
             );
 
@@ -699,7 +255,7 @@ async function loadChapters() {
         if (!response.ok) {
 
             throw new Error(
-                `HTTP ${response.status}`
+                `تعذر تحميل index.json - HTTP ${response.status}`
             );
 
         }
@@ -709,76 +265,85 @@ async function loadChapters() {
             await response.json();
 
 
+        /*
+         * التأكد من صحة JSON
+         */
+
         if (
             !data ||
             !Array.isArray(data.works)
         ) {
 
             throw new Error(
-                "ملف index.json غير صحيح"
+                "index.json لا يحتوي على works بشكل صحيح."
             );
 
         }
 
 
         /*
-         * البحث عن العمل بالـ slug
-         *
-         * index.json:
-         *
-         * "slug": "فصل-سري"
+         * البحث عن العمل
          */
 
         const work =
-            data.works.find(
-                item => {
-
-                    const itemSlug =
-                        String(
-                            item.slug || ""
-                        )
-                            .trim()
-                            .toLowerCase();
-
-
-                    return (
-                        itemSlug ===
-                        WORK_SLUG
-                            .trim()
-                            .toLowerCase()
-                    );
-
-                }
+            findWork(
+                data.works
             );
 
 
+        /*
+         * إذا لم يتم العثور عليه
+         */
+
         if (!work) {
 
+            const availableWorks =
+                data.works
+                    .map(
+                        item =>
+                            item.slug ||
+                            item.title ||
+                            item.file ||
+                            "بدون اسم"
+                    )
+                    .join(" ، ");
+
+
             throw new Error(
-                `لم يتم العثور على العمل "${WORK_SLUG}" في index.json`
+                `لم يتم العثور على العمل.
+
+العمل المطلوب من الرابط:
+${getSlugFromURL() || "غير معروف"}
+
+الأعمال الموجودة:
+${availableWorks || "لا يوجد"}`
             );
 
         }
 
 
-        let chapters = [];
+        console.log(
+            "MangaX - تم العثور على العمل:",
+            work
+        );
 
 
         /* =====================================================
-           إذا كان chapters رقمًا
-
-           مثال:
-
-           "chapters": 310
-
-           يتم إنشاء:
-
-           1
-           2
-           3
-           ...
-           310
+           CHAPTERS
         ===================================================== */
+
+        let chapters = [];
+
+
+        /*
+         * إذا كان:
+
+         "chapters": 310
+
+         ننشئ تلقائيًا:
+
+         1 إلى 310
+         */
 
         if (
             typeof work.chapters === "number"
@@ -805,28 +370,26 @@ async function loadChapters() {
         }
 
 
-        /* =====================================================
-           إذا كان chapters مصفوفة
-
-           مثال:
-
-           "chapters": [
-               1,
-               2,
-               3,
-               ...
-               310
-           ]
-        ===================================================== */
+        /*
+         * إذا كان chapters مصفوفة
+         */
 
         else if (
-            Array.isArray(work.chapters)
+            Array.isArray(
+                work.chapters
+            )
         ) {
 
             chapters =
                 work.chapters
                     .map(
                         chapter => {
+
+                            /*
+                             * إذا كان:
+
+                             {"number": 5}
+                             */
 
                             if (
                                 typeof chapter ===
@@ -841,6 +404,12 @@ async function loadChapters() {
 
                             }
 
+
+                            /*
+                             * إذا كان:
+
+                             5
+                             */
 
                             return Number(
                                 chapter
@@ -860,33 +429,41 @@ async function loadChapters() {
         }
 
 
-        /* =====================================================
-           إزالة الفصول المكررة
-        ===================================================== */
+        /*
+         * إزالة التكرار
+         */
 
         chapters =
-            [...new Set(chapters)];
+            [
+                ...new Set(
+                    chapters
+                )
+            ];
 
 
-        /* =====================================================
-           ترتيب من الأحدث إلى الأقدم
-        ===================================================== */
+        /*
+         * ترتيب من الأحدث إلى الأقدم
+         */
 
         chapters.sort(
-            (a, b) => b - a
+            (a, b) =>
+                b - a
         );
 
 
-        /* =====================================================
-           عرض الفصول
-        ===================================================== */
+        /*
+         * عرض الفصول
+         */
 
         renderChapters(
+            work,
             chapters
         );
 
+    }
 
-    } catch (error) {
+
+    catch (error) {
 
         console.error(
             "MangaX:",
@@ -894,27 +471,38 @@ async function loadChapters() {
         );
 
 
-        chapterCount.textContent =
-            "خطأ";
+        if (chapterCount) {
+
+            chapterCount.textContent =
+                "خطأ";
+
+        }
 
 
-        chaptersContainer.innerHTML = `
+        if (chaptersContainer) {
 
-            <div class="empty">
+            chaptersContainer.innerHTML = `
 
-                ❌ تعذر تحميل الفصول
+                <div class="empty">
 
-                <br><br>
+                    ❌ تعذر تحميل الفصول
 
-                <small>
-                    ${escapeHTML(
-                        error.message
-                    )}
-                </small>
+                    <br><br>
 
-            </div>
+                    <small style="
+                        white-space: pre-line;
+                        line-height: 2;
+                    ">
+                        ${escapeHTML(
+                            error.message
+                        )}
+                    </small>
 
-        `;
+                </div>
+
+            `;
+
+        }
 
     }
 
@@ -926,8 +514,14 @@ async function loadChapters() {
 ========================================================= */
 
 function renderChapters(
+    work,
     chapters
 ) {
+
+    if (!chapterCount) {
+        return;
+    }
+
 
     chapterCount.textContent =
         `${chapters.length} فصل`;
@@ -949,31 +543,47 @@ function renderChapters(
     }
 
 
+    /*
+     * استخدام slug الموجود فعليًا
+     * في index.json
+     */
+
+    const slug =
+        String(
+            work.slug || ""
+        ).trim();
+
+
+    /*
+     * إنشاء روابط الفصول
+     */
+
     chaptersContainer.innerHTML =
         chapters
             .map(
                 number => {
 
-
                     /*
-                     * اسم ملف الفصل الذي يستخدمه البوت:
-                     *
-                     * فصل-سري-chapter-1.html
-                     * فصل-سري-chapter-2.html
-                     * ...
-                     * فصل-سري-chapter-310.html
+                     * اسم ملف الفصل:
+
+                     فصل-سري-chapter-310.html
                      */
 
                     const filename =
-                        `${WORK_SLUG}-chapter-${number}.html`;
+                        `${slug}-chapter-${number}.html`;
 
 
                     /*
-                     * رابط الفصل داخل مجلد العمل
+                     * الرابط:
+
+                     /manga/فصل-سري/
+                     فصل-سري-chapter-310.html
                      */
 
                     const url =
-                        `/manga/${encodeURIComponent(WORK_SLUG)}/${encodeURIComponent(filename)}`;
+                        `/manga/` +
+                        `${encodeURIComponent(slug)}/` +
+                        `${encodeURIComponent(filename)}`;
 
 
                     return `
@@ -1014,8 +624,3 @@ function renderChapters(
 loadChapters();
 
 </script>
-
-
-</body>
-
-</html>
