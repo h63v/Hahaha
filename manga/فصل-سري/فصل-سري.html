@@ -634,7 +634,15 @@ footer {
 
 const INDEX_URL = "/manga/index.json";
 
-const WORK_SLUG = "secret-chapter";
+
+/* =========================================================
+   مهم جدًا
+   هذا يجب أن يطابق slug الموجود في index.json
+
+   "slug": "فصل-سري"
+========================================================= */
+
+const WORK_SLUG = "فصل-سري";
 
 
 /* =========================================================
@@ -646,6 +654,29 @@ const chaptersContainer =
 
 const chapterCount =
     document.getElementById("chapterCount");
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(
+            /[&<>"']/g,
+            character => ({
+
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+
+            }[character])
+        );
+
+}
 
 
 /* =========================================================
@@ -690,20 +721,41 @@ async function loadChapters() {
         }
 
 
+        /*
+         * البحث عن العمل بالـ slug
+         *
+         * index.json:
+         *
+         * "slug": "فصل-سري"
+         */
+
         const work =
             data.works.find(
-                item =>
-                    String(item.slug)
-                        .toLowerCase()
-                    ===
-                    WORK_SLUG.toLowerCase()
+                item => {
+
+                    const itemSlug =
+                        String(
+                            item.slug || ""
+                        )
+                            .trim()
+                            .toLowerCase();
+
+
+                    return (
+                        itemSlug ===
+                        WORK_SLUG
+                            .trim()
+                            .toLowerCase()
+                    );
+
+                }
             );
 
 
         if (!work) {
 
             throw new Error(
-                "لم يتم العثور على العمل في index.json"
+                `لم يتم العثور على العمل "${WORK_SLUG}" في index.json`
             );
 
         }
@@ -712,11 +764,21 @@ async function loadChapters() {
         let chapters = [];
 
 
-        /*
-         * إذا كان chapters رقمًا:
-         *
-         * "chapters": 310
-         */
+        /* =====================================================
+           إذا كان chapters رقمًا
+
+           مثال:
+
+           "chapters": 310
+
+           يتم إنشاء:
+
+           1
+           2
+           3
+           ...
+           310
+        ===================================================== */
 
         if (
             typeof work.chapters === "number"
@@ -725,7 +787,9 @@ async function loadChapters() {
             const total =
                 Math.max(
                     0,
-                    Math.floor(work.chapters)
+                    Math.floor(
+                        work.chapters
+                    )
                 );
 
 
@@ -741,9 +805,19 @@ async function loadChapters() {
         }
 
 
-        /*
-         * إذا كان chapters مصفوفة
-         */
+        /* =====================================================
+           إذا كان chapters مصفوفة
+
+           مثال:
+
+           "chapters": [
+               1,
+               2,
+               3,
+               ...
+               310
+           ]
+        ===================================================== */
 
         else if (
             Array.isArray(work.chapters)
@@ -751,26 +825,29 @@ async function loadChapters() {
 
             chapters =
                 work.chapters
-                    .map(chapter => {
+                    .map(
+                        chapter => {
 
-                        if (
-                            typeof chapter ===
-                            "object"
-                            &&
-                            chapter !== null
-                        ) {
+                            if (
+                                typeof chapter ===
+                                    "object"
+                                &&
+                                chapter !== null
+                            ) {
+
+                                return Number(
+                                    chapter.number
+                                );
+
+                            }
+
 
                             return Number(
-                                chapter.number
+                                chapter
                             );
 
                         }
-
-                        return Number(
-                            chapter
-                        );
-
-                    })
+                    )
                     .filter(
                         number =>
                             Number.isFinite(
@@ -783,14 +860,26 @@ async function loadChapters() {
         }
 
 
-        /*
-         * ترتيب من الأحدث إلى الأقدم
-         */
+        /* =====================================================
+           إزالة الفصول المكررة
+        ===================================================== */
+
+        chapters =
+            [...new Set(chapters)];
+
+
+        /* =====================================================
+           ترتيب من الأحدث إلى الأقدم
+        ===================================================== */
 
         chapters.sort(
             (a, b) => b - a
         );
 
+
+        /* =====================================================
+           عرض الفصول
+        ===================================================== */
 
         renderChapters(
             chapters
@@ -849,7 +938,9 @@ function renderChapters(
         chaptersContainer.innerHTML = `
 
             <div class="empty">
+
                 لا توجد فصول حاليًا.
+
             </div>
 
         `;
@@ -860,61 +951,58 @@ function renderChapters(
 
     chaptersContainer.innerHTML =
         chapters
-            .map(number => {
-
-                const url =
-                    `secret-chapter-chapter-${number}.html`;
+            .map(
+                number => {
 
 
-                return `
+                    /*
+                     * اسم ملف الفصل الذي يستخدمه البوت:
+                     *
+                     * فصل-سري-chapter-1.html
+                     * فصل-سري-chapter-2.html
+                     * ...
+                     * فصل-سري-chapter-310.html
+                     */
 
-                    <a
-                        class="chapter"
-                        href="${url}"
-                    >
+                    const filename =
+                        `${WORK_SLUG}-chapter-${number}.html`;
 
-                        <span
-                            class="chapter-number"
+
+                    /*
+                     * رابط الفصل داخل مجلد العمل
+                     */
+
+                    const url =
+                        `/manga/${encodeURIComponent(WORK_SLUG)}/${encodeURIComponent(filename)}`;
+
+
+                    return `
+
+                        <a
+                            class="chapter"
+                            href="${url}"
                         >
-                            الفصل ${number}
-                        </span>
+
+                            <span
+                                class="chapter-number"
+                            >
+                                الفصل ${number}
+                            </span>
 
 
-                        <span
-                            class="chapter-read"
-                        >
-                            قراءة →
-                        </span>
+                            <span
+                                class="chapter-read"
+                            >
+                                قراءة →
+                            </span>
 
-                    </a>
+                        </a>
 
-                `;
+                    `;
 
-            })
+                }
+            )
             .join("");
-
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHTML(value) {
-
-    return String(value ?? "")
-        .replace(
-            /[&<>"']/g,
-            character => ({
-
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#039;"
-
-            }[character])
-        );
 
 }
 
