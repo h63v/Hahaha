@@ -13,6 +13,23 @@
       ],
       "status": "completed",
       "chapters": 27
+    },
+    {
+      "slug": "secret-chapter",
+      "title": "الفصل السري",
+      "file": "secret-chapter.html",
+      "cover": "https://a.top4top.io/p_3879l2za11.jpg",
+      "description": "الفصل السري - عمل مستمر على MangaX.",
+      "genres": [
+        "حريم",
+        "دراما",
+        "محارم",
+        "رومانسي",
+        "ميلف",
+        "مكان عام"
+      ],
+      "status": "ongoing",
+      "chapters": 310
     }
   ]
 }
