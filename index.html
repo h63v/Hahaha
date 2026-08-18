@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>NoroHentai | مانجا</title>
-    <meta name="description" content="NoroHentai - منصة مانجا بتصميم أسود وأحمر">
+    <title>NoroHentai — Manga</title>
+    <meta name="description" content="NoroHentai - اقرأ وتصفح أحدث المانجا">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,39 +19,38 @@
 <!-- ================= HEADER ================= -->
 
 <header class="header">
-
-    <div class="header-container">
+    <div class="container header-inner">
 
         <a href="#" class="logo">
-            <span class="logo-mark">N</span>
+            <span class="logo-icon">N</span>
             <span>Noro<span>Hentai</span></span>
         </a>
 
-        <nav class="nav">
+        <nav class="desktop-nav">
             <a href="#home" class="active">الرئيسية</a>
-            <a href="#latest">أحدث الفصول</a>
+            <a href="#latest">الأحدث</a>
             <a href="#popular">الأكثر قراءة</a>
-            <a href="#library">المكتبة</a>
+            <a href="#genres">التصنيفات</a>
         </nav>
 
-        <div class="header-actions">
+        <div class="header-buttons">
 
-            <button class="icon-btn" id="searchBtn" aria-label="بحث">
-                🔍
+            <button class="header-btn" id="searchButton" aria-label="بحث">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <path d="m20 20-4-4"></path>
+                </svg>
             </button>
 
-            <button class="icon-btn" id="themeBtn" aria-label="الوضع الليلي">
-                ☾
-            </button>
-
-            <button class="menu-btn" id="menuBtn">
-                ☰
+            <button class="header-btn menu-toggle" id="menuButton" aria-label="القائمة">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
             </button>
 
         </div>
 
     </div>
-
 </header>
 
 
@@ -60,23 +59,28 @@
 <div class="mobile-menu" id="mobileMenu">
 
     <a href="#home">الرئيسية</a>
-    <a href="#latest">أحدث الفصول</a>
+    <a href="#latest">الأحدث</a>
     <a href="#popular">الأكثر قراءة</a>
-    <a href="#library">المكتبة</a>
+    <a href="#genres">التصنيفات</a>
 
 </div>
 
 
 <!-- ================= SEARCH ================= -->
 
-<section class="search-panel" id="searchPanel">
+<div class="search-box" id="searchBox">
 
-    <div class="search-container">
+    <div class="container search-inner">
+
+        <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m20 20-4-4"></path>
+        </svg>
 
         <input
             type="text"
             id="searchInput"
-            placeholder="ابحث عن اسم المانجا..."
+            placeholder="ابحث عن مانجا..."
             autocomplete="off"
         >
 
@@ -84,42 +88,40 @@
 
     </div>
 
-</section>
+</div>
 
 
 <!-- ================= HERO ================= -->
 
-<main>
-
 <section class="hero" id="home">
 
-    <div class="hero-overlay"></div>
+    <div class="hero-bg"></div>
 
-    <div class="hero-content">
+    <div class="container hero-content">
 
-        <div class="hero-badge">
-            <span></span>
-            مكتبة NoroHentai
-        </div>
+        <span class="hero-label">
+            NOROHENTAI
+        </span>
 
         <h1>
             عالم المانجا
-            <strong>بين يديك</strong>
+            <br>
+            <span>بين يديك.</span>
         </h1>
 
         <p>
-            استكشف مجموعة من الأعمال والقصص، تابع أحدث الفصول
-            واحفظ أعمالك المفضلة في مكان واحد.
+            اكتشف أعمالك المفضلة، تابع أحدث الفصول
+            واستمتع بتجربة قراءة بسيطة وسريعة.
         </p>
 
         <div class="hero-buttons">
 
-            <a href="#latest" class="btn primary">
-                استكشف الآن
+            <a href="#latest" class="primary-button">
+                ابدأ القراءة
                 <span>←</span>
             </a>
 
-            <a href="#popular" class="btn secondary">
+            <a href="#popular" class="secondary-button">
                 الأكثر قراءة
             </a>
 
@@ -130,419 +132,394 @@
 </section>
 
 
-<!-- ================= CATEGORIES ================= -->
+<!-- ================= MAIN ================= -->
 
-<section class="section categories-section">
-
-    <div class="section-heading">
-
-        <div>
-            <span class="small-title">EXPLORE</span>
-            <h2>التصنيفات</h2>
-        </div>
-
-    </div>
-
-    <div class="categories">
-
-        <button class="category active" data-filter="all">
-            الكل
-        </button>
-
-        <button class="category" data-filter="اكشن">
-            ⚔️ أكشن
-        </button>
-
-        <button class="category" data-filter="رومانسي">
-            ❤️ رومانسي
-        </button>
-
-        <button class="category" data-filter="دراما">
-            🎭 دراما
-        </button>
-
-        <button class="category" data-filter="خيال">
-            🔮 خيال
-        </button>
-
-        <button class="category" data-filter="كوميدي">
-            😂 كوميدي
-        </button>
-
-    </div>
-
-</section>
+<main>
 
 
 <!-- ================= LATEST ================= -->
 
 <section class="section" id="latest">
 
-    <div class="section-heading">
+    <div class="container">
 
-        <div>
-            <span class="small-title">LATEST UPDATES</span>
-            <h2>أحدث الفصول</h2>
+        <div class="section-header">
+
+            <div>
+                <span class="section-label">
+                    LATEST
+                </span>
+
+                <h2>
+                    أحدث الأعمال
+                </h2>
+            </div>
+
+            <a href="#" class="see-all">
+                عرض الكل
+                <span>←</span>
+            </a>
+
         </div>
 
-        <a href="#" class="view-all">
-            عرض الكل ←
-        </a>
 
-    </div>
+        <div class="manga-grid" id="mangaGrid">
 
 
-    <div class="manga-grid" id="mangaGrid">
+            <!-- CARD 1 -->
 
+            <article
+                class="manga-card"
+                data-title="Solo Leveling"
+                data-genres="اكشن خيال"
+            >
 
-        <!-- MANGA 1 -->
+                <div class="manga-cover">
 
-        <article
-            class="manga-card"
-            data-title="Solo Leveling"
-            data-genres="اكشن خيال"
-        >
+                    <img
+                        src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=700&q=80"
+                        alt="Solo Leveling"
+                    >
 
-            <div class="cover">
-
-                <img
-                    src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=700&q=80"
-                    alt="Solo Leveling"
-                >
-
-                <div class="cover-overlay"></div>
-
-                <span class="status ongoing">
-                    مستمر
-                </span>
-
-                <button class="favorite">
-                    ♡
-                </button>
-
-                <div class="card-read">
-                    قراءة
-                </div>
-
-            </div>
-
-            <div class="manga-info">
-
-                <h3>Solo Leveling</h3>
-
-                <div class="genres">
-                    <span>أكشن</span>
-                    <span>خيال</span>
-                </div>
-
-                <div class="chapter-row">
-
-                    <span>
-                        الفصل 210
+                    <span class="status">
+                        مستمر
                     </span>
 
-                    <span class="time">
-                        منذ ساعتين
+                    <button
+                        class="favorite"
+                        aria-label="إضافة للمفضلة"
+                    >
+                        ♡
+                    </button>
+
+                </div>
+
+                <div class="manga-body">
+
+                    <h3>
+                        Solo Leveling
+                    </h3>
+
+                    <div class="tags">
+                        <span>أكشن</span>
+                        <span>خيال</span>
+                    </div>
+
+                    <div class="chapter">
+
+                        <span>
+                            الفصل 210
+                        </span>
+
+                        <small>
+                            منذ ساعتين
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- CARD 2 -->
+
+            <article
+                class="manga-card"
+                data-title="The Beginning After The End"
+                data-genres="اكشن دراما خيال"
+            >
+
+                <div class="manga-cover">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=700&q=80"
+                        alt="The Beginning After The End"
+                    >
+
+                    <span class="status">
+                        مستمر
                     </span>
 
+                    <button
+                        class="favorite"
+                        aria-label="إضافة للمفضلة"
+                    >
+                        ♡
+                    </button>
+
                 </div>
 
-            </div>
+                <div class="manga-body">
 
-        </article>
+                    <h3>
+                        The Beginning After The End
+                    </h3>
 
+                    <div class="tags">
+                        <span>أكشن</span>
+                        <span>دراما</span>
+                    </div>
 
-        <!-- MANGA 2 -->
+                    <div class="chapter">
 
-        <article
-            class="manga-card"
-            data-title="The Beginning After The End"
-            data-genres="اكشن خيال دراما"
-        >
+                        <span>
+                            الفصل 198
+                        </span>
 
-            <div class="cover">
+                        <small>
+                            منذ 5 ساعات
+                        </small>
 
-                <img
-                    src="https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=700&q=80"
-                    alt="The Beginning After The End"
-                >
+                    </div>
 
-                <div class="cover-overlay"></div>
-
-                <span class="status ongoing">
-                    مستمر
-                </span>
-
-                <button class="favorite">
-                    ♡
-                </button>
-
-                <div class="card-read">
-                    قراءة
                 </div>
 
-            </div>
+            </article>
 
-            <div class="manga-info">
 
-                <h3>The Beginning After The End</h3>
+            <!-- CARD 3 -->
 
-                <div class="genres">
-                    <span>أكشن</span>
-                    <span>دراما</span>
-                </div>
+            <article
+                class="manga-card"
+                data-title="Omniscient Reader"
+                data-genres="اكشن خيال"
+            >
 
-                <div class="chapter-row">
+                <div class="manga-cover">
 
-                    <span>
-                        الفصل 198
+                    <img
+                        src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=700&q=80"
+                        alt="Omniscient Reader"
+                    >
+
+                    <span class="status">
+                        مستمر
                     </span>
 
-                    <span class="time">
-                        منذ 5 ساعات
+                    <button
+                        class="favorite"
+                        aria-label="إضافة للمفضلة"
+                    >
+                        ♡
+                    </button>
+
+                </div>
+
+                <div class="manga-body">
+
+                    <h3>
+                        Omniscient Reader
+                    </h3>
+
+                    <div class="tags">
+                        <span>خيال</span>
+                        <span>أكشن</span>
+                    </div>
+
+                    <div class="chapter">
+
+                        <span>
+                            الفصل 184
+                        </span>
+
+                        <small>
+                            أمس
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- CARD 4 -->
+
+            <article
+                class="manga-card"
+                data-title="Lookism"
+                data-genres="دراما اكشن"
+            >
+
+                <div class="manga-cover">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1577083288073-40892c0860a4?auto=format&fit=crop&w=700&q=80"
+                        alt="Lookism"
+                    >
+
+                    <span class="status">
+                        مستمر
                     </span>
 
+                    <button
+                        class="favorite"
+                        aria-label="إضافة للمفضلة"
+                    >
+                        ♡
+                    </button>
+
                 </div>
 
-            </div>
+                <div class="manga-body">
 
-        </article>
+                    <h3>
+                        Lookism
+                    </h3>
 
+                    <div class="tags">
+                        <span>دراما</span>
+                        <span>أكشن</span>
+                    </div>
 
-        <!-- MANGA 3 -->
+                    <div class="chapter">
 
-        <article
-            class="manga-card"
-            data-title="Omniscient Reader"
-            data-genres="اكشن خيال"
-        >
+                        <span>
+                            الفصل 525
+                        </span>
 
-            <div class="cover">
+                        <small>
+                            قبل 3 أيام
+                        </small>
 
-                <img
-                    src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=700&q=80"
-                    alt="Omniscient Reader"
-                >
+                    </div>
 
-                <div class="cover-overlay"></div>
-
-                <span class="status ongoing">
-                    مستمر
-                </span>
-
-                <button class="favorite">
-                    ♡
-                </button>
-
-                <div class="card-read">
-                    قراءة
                 </div>
 
-            </div>
+            </article>
 
-            <div class="manga-info">
 
-                <h3>Omniscient Reader</h3>
+            <!-- CARD 5 -->
 
-                <div class="genres">
-                    <span>خيال</span>
-                    <span>أكشن</span>
-                </div>
+            <article
+                class="manga-card"
+                data-title="Mercenary Enrollment"
+                data-genres="اكشن دراما"
+            >
 
-                <div class="chapter-row">
+                <div class="manga-cover">
 
-                    <span>
-                        الفصل 184
+                    <img
+                        src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80"
+                        alt="Mercenary Enrollment"
+                    >
+
+                    <span class="status">
+                        مستمر
                     </span>
 
-                    <span class="time">
-                        أمس
+                    <button
+                        class="favorite"
+                        aria-label="إضافة للمفضلة"
+                    >
+                        ♡
+                    </button>
+
+                </div>
+
+                <div class="manga-body">
+
+                    <h3>
+                        Mercenary Enrollment
+                    </h3>
+
+                    <div class="tags">
+                        <span>أكشن</span>
+                        <span>دراما</span>
+                    </div>
+
+                    <div class="chapter">
+
+                        <span>
+                            الفصل 214
+                        </span>
+
+                        <small>
+                            قبل 4 أيام
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- CARD 6 -->
+
+            <article
+                class="manga-card"
+                data-title="The World After The Fall"
+                data-genres="اكشن خيال"
+            >
+
+                <div class="manga-cover">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=700&q=80"
+                        alt="The World After The Fall"
+                    >
+
+                    <span class="status completed">
+                        مكتمل
                     </span>
 
+                    <button
+                        class="favorite"
+                        aria-label="إضافة للمفضلة"
+                    >
+                        ♡
+                    </button>
+
                 </div>
 
+                <div class="manga-body">
+
+                    <h3>
+                        The World After The Fall
+                    </h3>
+
+                    <div class="tags">
+                        <span>أكشن</span>
+                        <span>خيال</span>
+                    </div>
+
+                    <div class="chapter">
+
+                        <span>
+                            الفصل 120
+                        </span>
+
+                        <small>
+                            قبل أسبوع
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        </div>
+
+
+        <div class="no-results" id="noResults">
+
+            <div class="no-results-icon">
+                🔎
             </div>
 
-        </article>
+            <h3>
+                لا توجد نتائج
+            </h3>
 
+            <p>
+                لم نجد أي عمل مطابق لبحثك.
+            </p>
 
-        <!-- MANGA 4 -->
+        </div>
 
-        <article
-            class="manga-card"
-            data-title="The World After The Fall"
-            data-genres="اكشن خيال"
-        >
-
-            <div class="cover">
-
-                <img
-                    src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=700&q=80"
-                    alt="The World After The Fall"
-                >
-
-                <div class="cover-overlay"></div>
-
-                <span class="status completed">
-                    مكتمل
-                </span>
-
-                <button class="favorite">
-                    ♡
-                </button>
-
-                <div class="card-read">
-                    قراءة
-                </div>
-
-            </div>
-
-            <div class="manga-info">
-
-                <h3>The World After The Fall</h3>
-
-                <div class="genres">
-                    <span>أكشن</span>
-                    <span>خيال</span>
-                </div>
-
-                <div class="chapter-row">
-
-                    <span>
-                        الفصل 120
-                    </span>
-
-                    <span class="time">
-                        قبل يومين
-                    </span>
-
-                </div>
-
-            </div>
-
-        </article>
-
-
-        <!-- MANGA 5 -->
-
-        <article
-            class="manga-card"
-            data-title="Lookism"
-            data-genres="دراما اكشن"
-        >
-
-            <div class="cover">
-
-                <img
-                    src="https://images.unsplash.com/photo-1577083288073-40892c0860a4?auto=format&fit=crop&w=700&q=80"
-                    alt="Lookism"
-                >
-
-                <div class="cover-overlay"></div>
-
-                <span class="status ongoing">
-                    مستمر
-                </span>
-
-                <button class="favorite">
-                    ♡
-                </button>
-
-                <div class="card-read">
-                    قراءة
-                </div>
-
-            </div>
-
-            <div class="manga-info">
-
-                <h3>Lookism</h3>
-
-                <div class="genres">
-                    <span>دراما</span>
-                    <span>أكشن</span>
-                </div>
-
-                <div class="chapter-row">
-
-                    <span>
-                        الفصل 525
-                    </span>
-
-                    <span class="time">
-                        قبل 3 أيام
-                    </span>
-
-                </div>
-
-            </div>
-
-        </article>
-
-
-        <!-- MANGA 6 -->
-
-        <article
-            class="manga-card"
-            data-title="Mercenary Enrollment"
-            data-genres="اكشن دراما"
-        >
-
-            <div class="cover">
-
-                <img
-                    src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80"
-                    alt="Mercenary Enrollment"
-                >
-
-                <div class="cover-overlay"></div>
-
-                <span class="status ongoing">
-                    مستمر
-                </span>
-
-                <button class="favorite">
-                    ♡
-                </button>
-
-                <div class="card-read">
-                    قراءة
-                </div>
-
-            </div>
-
-            <div class="manga-info">
-
-                <h3>Mercenary Enrollment</h3>
-
-                <div class="genres">
-                    <span>أكشن</span>
-                    <span>دراما</span>
-                </div>
-
-                <div class="chapter-row">
-
-                    <span>
-                        الفصل 214
-                    </span>
-
-                    <span class="time">
-                        قبل 4 أيام
-                    </span>
-
-                </div>
-
-            </div>
-
-        </article>
-
-    </div>
-
-
-    <div class="no-results" id="noResults">
-        <div>⌕</div>
-        <h3>لم يتم العثور على نتائج</h3>
-        <p>جرب البحث باسم مختلف.</p>
     </div>
 
 </section>
@@ -550,79 +527,98 @@
 
 <!-- ================= POPULAR ================= -->
 
-<section class="section popular-section" id="popular">
+<section class="section popular" id="popular">
 
-    <div class="section-heading">
+    <div class="container">
 
-        <div>
-            <span class="small-title">TRENDING NOW</span>
-            <h2>الأكثر قراءة</h2>
-        </div>
+        <div class="section-header">
 
-    </div>
+            <div>
+                <span class="section-label">
+                    TRENDING
+                </span>
 
-
-    <div class="popular-list">
-
-        <div class="popular-item">
-
-            <div class="rank">01</div>
-
-            <div class="popular-cover">
-                <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=300&q=80">
-            </div>
-
-            <div class="popular-info">
-                <h3>Solo Leveling</h3>
-                <p>أكشن • خيال</p>
-            </div>
-
-            <div class="views">
-                <strong>1.2M</strong>
-                <span>قراءة</span>
+                <h2>
+                    الأكثر قراءة
+                </h2>
             </div>
 
         </div>
 
 
-        <div class="popular-item">
-
-            <div class="rank">02</div>
-
-            <div class="popular-cover">
-                <img src="https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=300&q=80">
-            </div>
-
-            <div class="popular-info">
-                <h3>The Beginning After The End</h3>
-                <p>أكشن • دراما</p>
-            </div>
-
-            <div class="views">
-                <strong>980K</strong>
-                <span>قراءة</span>
-            </div>
-
-        </div>
+        <div class="popular-grid">
 
 
-        <div class="popular-item">
+            <a href="#" class="popular-card">
 
-            <div class="rank">03</div>
+                <span class="popular-number">
+                    01
+                </span>
 
-            <div class="popular-cover">
-                <img src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=300&q=80">
-            </div>
+                <img
+                    src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=300&q=80"
+                    alt=""
+                >
 
-            <div class="popular-info">
-                <h3>Omniscient Reader</h3>
-                <p>خيال • أكشن</p>
-            </div>
+                <div>
+                    <h3>
+                        Solo Leveling
+                    </h3>
 
-            <div class="views">
-                <strong>740K</strong>
-                <span>قراءة</span>
-            </div>
+                    <p>
+                        1.2M قراءة
+                    </p>
+                </div>
+
+            </a>
+
+
+            <a href="#" class="popular-card">
+
+                <span class="popular-number">
+                    02
+                </span>
+
+                <img
+                    src="https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=300&q=80"
+                    alt=""
+                >
+
+                <div>
+                    <h3>
+                        The Beginning After The End
+                    </h3>
+
+                    <p>
+                        980K قراءة
+                    </p>
+                </div>
+
+            </a>
+
+
+            <a href="#" class="popular-card">
+
+                <span class="popular-number">
+                    03
+                </span>
+
+                <img
+                    src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=300&q=80"
+                    alt=""
+                >
+
+                <div>
+                    <h3>
+                        Omniscient Reader
+                    </h3>
+
+                    <p>
+                        740K قراءة
+                    </p>
+                </div>
+
+            </a>
 
         </div>
 
@@ -631,39 +627,59 @@
 </section>
 
 
-<!-- ================= LIBRARY ================= -->
+<!-- ================= GENRES ================= -->
 
-<section class="section library-section" id="library">
+<section class="section genres-section" id="genres">
 
-    <div class="library-box">
+    <div class="container">
 
-        <div class="library-icon">
-            ♡
-        </div>
+        <div class="section-header">
 
-        <div>
+            <div>
+                <span class="section-label">
+                    EXPLORE
+                </span>
 
-            <span class="small-title">
-                YOUR LIBRARY
-            </span>
-
-            <h2>
-                مكتبتك الخاصة
-            </h2>
-
-            <p>
-                أضف أعمالك المفضلة إلى مكتبتك للوصول إليها بسرعة.
-            </p>
+                <h2>
+                    التصنيفات
+                </h2>
+            </div>
 
         </div>
 
-        <button class="btn primary">
-            استكشف الأعمال
-        </button>
+
+        <div class="genres">
+
+            <button class="genre active" data-filter="all">
+                الكل
+            </button>
+
+            <button class="genre" data-filter="اكشن">
+                أكشن
+            </button>
+
+            <button class="genre" data-filter="رومانسي">
+                رومانسي
+            </button>
+
+            <button class="genre" data-filter="دراما">
+                دراما
+            </button>
+
+            <button class="genre" data-filter="خيال">
+                خيال
+            </button>
+
+            <button class="genre" data-filter="كوميدي">
+                كوميدي
+            </button>
+
+        </div>
 
     </div>
 
 </section>
+
 
 </main>
 
@@ -672,17 +688,25 @@
 
 <footer class="footer">
 
-    <div class="footer-container">
+    <div class="container footer-inner">
 
         <div class="footer-brand">
 
             <a href="#" class="logo">
-                <span class="logo-mark">N</span>
-                <span>Noro<span>Hentai</span></span>
+
+                <span class="logo-icon">
+                    N
+                </span>
+
+                <span>
+                    Noro<span>Hentai</span>
+                </span>
+
             </a>
 
             <p>
-                منصة مانجا بتصميم عصري لتجربة قراءة مميزة.
+                منصة مانجا بتصميم بسيط وسريع
+                لتستمتع بقراءة أعمالك المفضلة.
             </p>
 
         </div>
@@ -690,19 +714,21 @@
 
         <div class="footer-links">
 
-            <div>
-                <h4>التصفح</h4>
-                <a href="#home">الرئيسية</a>
-                <a href="#latest">أحدث الفصول</a>
-                <a href="#popular">الأكثر قراءة</a>
-            </div>
+            <a href="#home">
+                الرئيسية
+            </a>
 
-            <div>
-                <h4>الموقع</h4>
-                <a href="#">من نحن</a>
-                <a href="#">سياسة الخصوصية</a>
-                <a href="#">تواصل معنا</a>
-            </div>
+            <a href="#latest">
+                الأحدث
+            </a>
+
+            <a href="#popular">
+                الأكثر قراءة
+            </a>
+
+            <a href="#genres">
+                التصنيفات
+            </a>
 
         </div>
 
@@ -711,7 +737,9 @@
 
     <div class="copyright">
 
-        © 2026 NoroHentai — جميع الحقوق محفوظة
+        © 2026 NoroHentai
+        <span>•</span>
+        جميع الحقوق محفوظة
 
     </div>
 
@@ -721,4 +749,4 @@
 <script src="script.js"></script>
 
 </body>
-  </html>
+    </html>
