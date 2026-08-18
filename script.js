@@ -1,40 +1,28 @@
-/* ==================================================
-   NoroHentai
+/* =====================================================
+   NOROHENTAI
    Main JavaScript
-================================================== */
+===================================================== */
 
 
 /* ================= ELEMENTS ================= */
 
-const searchBtn =
-    document.getElementById("searchBtn");
+const searchButton =
+    document.getElementById("searchButton");
 
-const searchPanel =
-    document.getElementById("searchPanel");
-
-const closeSearch =
-    document.getElementById("closeSearch");
+const searchBox =
+    document.getElementById("searchBox");
 
 const searchInput =
     document.getElementById("searchInput");
 
-const menuBtn =
-    document.getElementById("menuBtn");
+const closeSearch =
+    document.getElementById("closeSearch");
+
+const menuButton =
+    document.getElementById("menuButton");
 
 const mobileMenu =
     document.getElementById("mobileMenu");
-
-const themeBtn =
-    document.getElementById("themeBtn");
-
-const mangaGrid =
-    document.getElementById("mangaGrid");
-
-const noResults =
-    document.getElementById("noResults");
-
-const categories =
-    document.querySelectorAll(".category");
 
 const mangaCards =
     document.querySelectorAll(".manga-card");
@@ -42,12 +30,18 @@ const mangaCards =
 const favorites =
     document.querySelectorAll(".favorite");
 
+const genres =
+    document.querySelectorAll(".genre");
 
-/* ================= SEARCH ================= */
+const noResults =
+    document.getElementById("noResults");
 
-searchBtn.addEventListener("click", () => {
 
-    searchPanel.classList.add("open");
+/* ================= SEARCH OPEN ================= */
+
+searchButton.addEventListener("click", () => {
+
+    searchBox.classList.add("open");
 
     setTimeout(() => {
         searchInput.focus();
@@ -56,16 +50,27 @@ searchBtn.addEventListener("click", () => {
 });
 
 
+/* ================= SEARCH CLOSE ================= */
+
 closeSearch.addEventListener("click", () => {
 
-    searchPanel.classList.remove("open");
-
-    searchInput.value = "";
-
-    filterManga("");
+    closeSearchBox();
 
 });
 
+
+function closeSearchBox() {
+
+    searchBox.classList.remove("open");
+
+    searchInput.value = "";
+
+    showAllCards();
+
+}
+
+
+/* ================= SEARCH ================= */
 
 searchInput.addEventListener("input", () => {
 
@@ -74,14 +79,16 @@ searchInput.addEventListener("input", () => {
             .trim()
             .toLowerCase();
 
-    filterManga(value);
+    if (!value) {
 
-});
+        showAllCards();
+
+        return;
+    }
 
 
-function filterManga(searchValue) {
+    let count = 0;
 
-    let visibleCount = 0;
 
     mangaCards.forEach(card => {
 
@@ -89,19 +96,21 @@ function filterManga(searchValue) {
             card.dataset.title
                 .toLowerCase();
 
-        const genres =
+        const cardGenres =
             card.dataset.genres
                 .toLowerCase();
 
-        const matches =
-            title.includes(searchValue) ||
-            genres.includes(searchValue);
 
-        if (matches) {
+        const found =
+            title.includes(value) ||
+            cardGenres.includes(value);
+
+
+        if (found) {
 
             card.style.display = "";
 
-            visibleCount++;
+            count++;
 
         } else {
 
@@ -112,7 +121,31 @@ function filterManga(searchValue) {
     });
 
 
-    if (visibleCount === 0) {
+    updateResults(count);
+
+});
+
+
+/* ================= SHOW ALL ================= */
+
+function showAllCards() {
+
+    mangaCards.forEach(card => {
+
+        card.style.display = "";
+
+    });
+
+    noResults.classList.remove("show");
+
+}
+
+
+/* ================= RESULTS ================= */
+
+function updateResults(count) {
+
+    if (count === 0) {
 
         noResults.classList.add("show");
 
@@ -127,7 +160,7 @@ function filterManga(searchValue) {
 
 /* ================= MOBILE MENU ================= */
 
-menuBtn.addEventListener("click", () => {
+menuButton.addEventListener("click", () => {
 
     mobileMenu.classList.toggle("open");
 
@@ -146,67 +179,6 @@ document.querySelectorAll(".mobile-menu a")
     });
 
 
-/* ================= CATEGORIES ================= */
-
-categories.forEach(category => {
-
-    category.addEventListener("click", () => {
-
-        categories.forEach(item => {
-
-            item.classList.remove("active");
-
-        });
-
-        category.classList.add("active");
-
-        const filter =
-            category.dataset.filter
-                .toLowerCase();
-
-        let visibleCount = 0;
-
-
-        mangaCards.forEach(card => {
-
-            const genres =
-                card.dataset.genres
-                    .toLowerCase();
-
-
-            if (
-                filter === "all" ||
-                genres.includes(filter)
-            ) {
-
-                card.style.display = "";
-
-                visibleCount++;
-
-            } else {
-
-                card.style.display = "none";
-
-            }
-
-        });
-
-
-        if (visibleCount === 0) {
-
-            noResults.classList.add("show");
-
-        } else {
-
-            noResults.classList.remove("show");
-
-        }
-
-    });
-
-});
-
-
 /* ================= FAVORITES ================= */
 
 favorites.forEach(button => {
@@ -216,6 +188,7 @@ favorites.forEach(button => {
         event.preventDefault();
 
         event.stopPropagation();
+
 
         button.classList.toggle("saved");
 
@@ -235,61 +208,81 @@ favorites.forEach(button => {
 });
 
 
-/* ================= THEME ================= */
+/* ================= GENRE FILTER ================= */
 
-/*
-   الموقع أساساً Dark.
-   هذا الزر يغير مظهر العناصر
-   إلى نسخة أهدأ عند الضغط.
-*/
+genres.forEach(genre => {
 
-let lightMode =
-    localStorage.getItem("noroTheme") === "light";
+    genre.addEventListener("click", () => {
 
+        genres.forEach(item => {
 
-function updateTheme() {
+            item.classList.remove("active");
 
-    if (lightMode) {
-
-        document.body.classList.add("light-mode");
-
-        themeBtn.textContent = "☀";
-
-    } else {
-
-        document.body.classList.remove("light-mode");
-
-        themeBtn.textContent = "☾";
-
-    }
-
-}
+        });
 
 
-themeBtn.addEventListener("click", () => {
+        genre.classList.add("active");
 
-    lightMode = !lightMode;
 
-    localStorage.setItem(
-        "noroTheme",
-        lightMode ? "light" : "dark"
-    );
+        const filter =
+            genre.dataset.filter
+                .toLowerCase();
 
-    updateTheme();
+
+        if (filter === "all") {
+
+            showAllCards();
+
+            return;
+        }
+
+
+        let count = 0;
+
+
+        mangaCards.forEach(card => {
+
+            const cardGenres =
+                card.dataset.genres
+                    .toLowerCase();
+
+
+            if (cardGenres.includes(filter)) {
+
+                card.style.display = "";
+
+                count++;
+
+            } else {
+
+                card.style.display = "none";
+
+            }
+
+        });
+
+
+        updateResults(count);
+
+
+        document.getElementById("latest")
+            .scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+    });
 
 });
 
 
-updateTheme();
-
-
-/* ================= CLOSE SEARCH WITH ESC ================= */
+/* ================= ESCAPE ================= */
 
 document.addEventListener("keydown", event => {
 
     if (event.key === "Escape") {
 
-        searchPanel.classList.remove("open");
+        closeSearchBox();
 
         mobileMenu.classList.remove("open");
 
@@ -298,77 +291,137 @@ document.addEventListener("keydown", event => {
 });
 
 
-/* ================= HEADER SCROLL ================= */
+/* ================= CLOSE MENU OUTSIDE ================= */
 
-let lastScroll = 0;
+document.addEventListener("click", event => {
 
-window.addEventListener("scroll", () => {
+    const clickedInsideMenu =
+        mobileMenu.contains(event.target);
 
-    const currentScroll =
-        window.scrollY;
-
-    const header =
-        document.querySelector(".header");
+    const clickedButton =
+        menuButton.contains(event.target);
 
 
-    if (currentScroll > 50) {
+    if (
+        !clickedInsideMenu &&
+        !clickedButton
+    ) {
 
-        header.style.boxShadow =
-            "0 10px 40px rgba(0,0,0,.35)";
-
-    } else {
-
-        header.style.boxShadow =
-            "none";
+        mobileMenu.classList.remove("open");
 
     }
-
-
-    lastScroll = currentScroll;
 
 });
 
 
-/* ================= SMOOTH NAV ================= */
+/* ================= ACTIVE NAV ================= */
+
+const navLinks =
+    document.querySelectorAll(
+        ".desktop-nav a"
+    );
+
+
+const sections =
+    document.querySelectorAll(
+        "main section"
+    );
+
+
+window.addEventListener("scroll", () => {
+
+    let current = "";
+
+
+    sections.forEach(section => {
+
+        const sectionTop =
+            section.offsetTop - 120;
+
+        const sectionHeight =
+            section.offsetHeight;
+
+
+        if (
+            window.scrollY >= sectionTop &&
+            window.scrollY <
+                sectionTop + sectionHeight
+        ) {
+
+            current =
+                section.getAttribute("id");
+
+        }
+
+    });
+
+
+    navLinks.forEach(link => {
+
+        link.classList.remove("active");
+
+
+        if (
+            link.getAttribute("href") ===
+            "#" + current
+        ) {
+
+            link.classList.add("active");
+
+        }
+
+    });
+
+});
+
+
+/* ================= SMOOTH LINKS ================= */
 
 document.querySelectorAll(
     'a[href^="#"]'
-).forEach(anchor => {
+).forEach(link => {
 
-    anchor.addEventListener("click", function(event) {
+    link.addEventListener("click", event => {
 
-        const targetId =
-            this.getAttribute("href");
+        const id =
+            link.getAttribute("href");
+
 
         if (
-            targetId === "#" ||
-            !targetId
+            !id ||
+            id === "#"
         ) {
+
             return;
+
         }
 
 
         const target =
-            document.querySelector(targetId);
+            document.querySelector(id);
+
 
         if (!target) {
+
             return;
+
         }
 
 
         event.preventDefault();
 
 
-        const headerHeight = 75;
+        const headerHeight = 70;
 
-        const targetPosition =
+
+        const position =
             target.offsetTop -
             headerHeight;
 
 
         window.scrollTo({
 
-            top: targetPosition,
+            top: position,
 
             behavior: "smooth"
 
@@ -379,58 +432,31 @@ document.querySelectorAll(
 });
 
 
-/* ================= CARD HOVER EFFECT ================= */
+/* ================= HEADER SHADOW ================= */
 
-mangaCards.forEach(card => {
-
-    card.addEventListener("mousemove", event => {
-
-        const rect =
-            card.getBoundingClientRect();
-
-        const x =
-            event.clientX - rect.left;
-
-        const y =
-            event.clientY - rect.top;
-
-        const centerX =
-            rect.width / 2;
-
-        const centerY =
-            rect.height / 2;
-
-        const rotateX =
-            (y - centerY) / 40;
-
-        const rotateY =
-            (centerX - x) / 40;
+const header =
+    document.querySelector(".header");
 
 
-        if (window.innerWidth > 800) {
+window.addEventListener("scroll", () => {
 
-            card.style.transform =
-                `translateY(-7px)
-                 perspective(800px)
-                 rotateX(${rotateX}deg)
-                 rotateY(${rotateY}deg)`;
+    if (window.scrollY > 20) {
 
-        }
+        header.style.boxShadow =
+            "0 10px 35px rgba(0,0,0,.25)";
 
-    });
+    } else {
 
+        header.style.boxShadow =
+            "none";
 
-    card.addEventListener("mouseleave", () => {
-
-        card.style.transform = "";
-
-    });
+    }
 
 });
 
 
-/* ================= INITIALIZATION ================= */
+/* ================= INIT ================= */
 
 console.log(
-    "NoroHentai loaded successfully."
+    "NoroHentai — Ready."
 );
