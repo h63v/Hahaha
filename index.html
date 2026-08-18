@@ -4,127 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>NoroHentai — Manga</title>
-    <meta name="description" content="NoroHentai - اقرأ وتصفح أحدث المانجا">
+    <title>إلى ريمي ♡</title>
+
+    <meta name="description" content="مجرد ذكرى صغيرة لشخص غالي جدًا.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
-
-<header class="header">
-    <div class="container header-inner">
-
-        <a href="#" class="logo">
-            <span class="logo-icon">N</span>
-            <span>Noro<span>Hentai</span></span>
-        </a>
-
-        <nav class="desktop-nav">
-            <a href="#home" class="active">الرئيسية</a>
-            <a href="#latest">الأحدث</a>
-            <a href="#popular">الأكثر قراءة</a>
-            <a href="#genres">التصنيفات</a>
-        </nav>
-
-        <div class="header-buttons">
-
-            <button class="header-btn" id="searchButton" aria-label="بحث">
-                <svg viewBox="0 0 24 24">
-                    <circle cx="11" cy="11" r="7"></circle>
-                    <path d="m20 20-4-4"></path>
-                </svg>
-            </button>
-
-            <button class="header-btn menu-toggle" id="menuButton" aria-label="القائمة">
-                <svg viewBox="0 0 24 24">
-                    <path d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-            </button>
-
-        </div>
-
+<div class="preloader" id="preloader">
+    <div class="loader-heart">♥</div>
+    <div class="loader-line">
+        <span></span>
     </div>
+    <p>جاري فتح الذكريات...</p>
+</div>
+
+
+<div class="grain"></div>
+
+<div class="background">
+    <div class="light light-1"></div>
+    <div class="light light-2"></div>
+    <div class="light light-3"></div>
+</div>
+
+<div id="particles"></div>
+
+
+<header class="navbar">
+
+    <div class="logo">
+        <span>♥</span>
+        <b>R</b>
+    </div>
+
+    <div class="nav-center">
+        <span id="memoryLabel">OUR STORY</span>
+    </div>
+
+    <div class="counter">
+        <span id="currentNumber">01</span>
+        <i></i>
+        <span>09</span>
+    </div>
+
 </header>
 
 
-<!-- ================= MOBILE MENU ================= -->
-
-<div class="mobile-menu" id="mobileMenu">
-
-    <a href="#home">الرئيسية</a>
-    <a href="#latest">الأحدث</a>
-    <a href="#popular">الأكثر قراءة</a>
-    <a href="#genres">التصنيفات</a>
-
-</div>
+<main id="main">
 
 
-<!-- ================= SEARCH ================= -->
+<!-- =========================
+     HERO
+========================= -->
 
-<div class="search-box" id="searchBox">
+<section class="screen active" id="screen-1">
 
-    <div class="container search-inner">
+    <div class="hero-content">
 
-        <svg viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="7"></circle>
-            <path d="m20 20-4-4"></path>
-        </svg>
+        <div class="hero-badge">
+            <span class="dot"></span>
+            رسالة صغيرة لك
+        </div>
 
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="ابحث عن مانجا..."
-            autocomplete="off"
-        >
-
-        <button id="closeSearch">×</button>
-
-    </div>
-
-</div>
-
-
-<!-- ================= HERO ================= -->
-
-<section class="hero" id="home">
-
-    <div class="hero-bg"></div>
-
-    <div class="container hero-content">
-
-        <span class="hero-label">
-            NOROHENTAI
-        </span>
+        <div class="hero-heart">
+            <div class="heart-ring ring-1"></div>
+            <div class="heart-ring ring-2"></div>
+            <div class="heart-core">♥</div>
+        </div>
 
         <h1>
-            عالم المانجا
+            هلا ريمي
             <br>
-            <span>بين يديك.</span>
+            <span>كيفك؟</span>
         </h1>
 
-        <p>
-            اكتشف أعمالك المفضلة، تابع أحدث الفصول
-            واستمتع بتجربة قراءة بسيطة وسريعة.
+        <p class="hero-description">
+            ما أدري إذا فيه طريقة أقدر أختصر فيها
+            كل اللي بقلبي، لذلك قررت أسوي لك
+            مكان صغير نحفظ فيه بعض الذكريات.
         </p>
 
-        <div class="hero-buttons">
+        <button class="luxury-btn" onclick="showScreen(2)">
+            <span>بخير ❤️</span>
+            <i>↗</i>
+        </button>
 
-            <a href="#latest" class="primary-button">
-                ابدأ القراءة
-                <span>←</span>
-            </a>
-
-            <a href="#popular" class="secondary-button">
-                الأكثر قراءة
-            </a>
-
+        <div class="hero-bottom">
+            <span>اضغطي للبدء</span>
+            <b>↓</b>
         </div>
 
     </div>
@@ -132,551 +107,583 @@
 </section>
 
 
-<!-- ================= MAIN ================= -->
+<!-- =========================
+     QUESTION
+========================= -->
 
-<main>
+<section class="screen" id="screen-2">
 
+    <div class="section-inner">
 
-<!-- ================= LATEST ================= -->
+        <div class="section-number">
+            <span>01</span>
+            <i></i>
+            <small>QUESTION</small>
+        </div>
 
-<section class="section" id="latest">
+        <div class="floating-symbol">♡</div>
 
-    <div class="container">
+        <h2>
+            قبل ما نكمل...
+            <br>
+            <span>عندي سؤال.</span>
+        </h2>
 
-        <div class="section-header">
+        <p class="description">
+            يمكن السؤال واضح،
+            ويمكن ما يحتاج حتى تفكير،
+            لكن أبي أسمع الإجابة منك.
+        </p>
 
-            <div>
-                <span class="section-label">
-                    LATEST
-                </span>
+        <div class="question-card">
 
-                <h2>
-                    أحدث الأعمال
-                </h2>
+            <div class="question-top">
+                <span>سؤال واحد فقط</span>
+                <b>♡</b>
             </div>
 
-            <a href="#" class="see-all">
-                عرض الكل
-                <span>←</span>
-            </a>
+            <div class="question">
+                تحبيني؟
+            </div>
+
+            <div class="answers">
+
+                <button class="answer yes" onclick="showScreen(3)">
+                    <span>إي</span>
+                    ❤️
+                </button>
+
+                <button class="answer no" id="noButton">
+                    <span>لا</span>
+                    💔
+                </button>
+
+            </div>
 
         </div>
 
+        <p class="secret">
+            * ملاحظة: زر "لا" عنده مشاكل تقنية غريبة 😂
+        </p>
 
-        <div class="manga-grid" id="mangaGrid">
+    </div>
+
+</section>
 
 
-            <!-- CARD 1 -->
+<!-- =========================
+     MEMORY 01
+========================= -->
 
-            <article
-                class="manga-card"
-                data-title="Solo Leveling"
-                data-genres="اكشن خيال"
-            >
+<section class="screen" id="screen-3">
 
-                <div class="manga-cover">
+    <div class="section-inner">
 
-                    <img
-                        src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=700&q=80"
-                        alt="Solo Leveling"
-                    >
+        <div class="section-number">
+            <span>02</span>
+            <i></i>
+            <small>THE BEGINNING</small>
+        </div>
 
-                    <span class="status">
-                        مستمر
-                    </span>
+        <div class="memory-date">
+            <span>منذ</span>
+            <strong>سنة وسبع أيام</strong>
+        </div>
 
-                    <button
-                        class="favorite"
-                        aria-label="إضافة للمفضلة"
-                    >
-                        ♡
-                    </button>
+        <h2>
+            وهنا تبدأ
+            <br>
+            <span>حكايتنا.</span>
+        </h2>
 
+        <div class="story-layout">
+
+            <div class="story-side">
+                <span class="big-number">01</span>
+                <div class="vertical-line"></div>
+                <span class="side-text">THE DAY WE MET</span>
+            </div>
+
+            <div class="story-content">
+
+                <p>
+                    قبل سنة وسبع أيام تعرفنا أنا وانتي
+                    في سيرفر <strong>هنتاي ديمون لورد</strong>.
+                </p>
+
+                <p>
+                    في ذاك الوقت ما كنت أعرف إن الشخص
+                    اللي قدامي بيصير بعد فترة جزء مهم
+                    من حياتي.
+                </p>
+
+                <p>
+                    بدأ الموضوع بشكل بسيط جدًا...
+                    كلام عادي، تعارف عادي،
+                    وأيام تمشي مثل أي أيام ثانية.
+                </p>
+
+                <p>
+                    لكن مع الوقت بدأت أحب وجودك أكثر،
+                    وأنتظر كلامك،
+                    وأنتبه لتفاصيلك أكثر مما كنت أتوقع.
+                </p>
+
+                <div class="red-quote">
+                    <span>“</span>
+                    حبيتك من أول نظرة،
+                    بس كنت مسوي نفسي ثقيل.
+                    <span>”</span>
                 </div>
 
-                <div class="manga-body">
-
-                    <h3>
-                        Solo Leveling
-                    </h3>
-
-                    <div class="tags">
-                        <span>أكشن</span>
-                        <span>خيال</span>
-                    </div>
-
-                    <div class="chapter">
-
-                        <span>
-                            الفصل 210
-                        </span>
-
-                        <small>
-                            منذ ساعتين
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- CARD 2 -->
-
-            <article
-                class="manga-card"
-                data-title="The Beginning After The End"
-                data-genres="اكشن دراما خيال"
-            >
-
-                <div class="manga-cover">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=700&q=80"
-                        alt="The Beginning After The End"
-                    >
-
-                    <span class="status">
-                        مستمر
-                    </span>
-
-                    <button
-                        class="favorite"
-                        aria-label="إضافة للمفضلة"
-                    >
-                        ♡
-                    </button>
-
-                </div>
-
-                <div class="manga-body">
-
-                    <h3>
-                        The Beginning After The End
-                    </h3>
-
-                    <div class="tags">
-                        <span>أكشن</span>
-                        <span>دراما</span>
-                    </div>
-
-                    <div class="chapter">
-
-                        <span>
-                            الفصل 198
-                        </span>
-
-                        <small>
-                            منذ 5 ساعات
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- CARD 3 -->
-
-            <article
-                class="manga-card"
-                data-title="Omniscient Reader"
-                data-genres="اكشن خيال"
-            >
-
-                <div class="manga-cover">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=700&q=80"
-                        alt="Omniscient Reader"
-                    >
-
-                    <span class="status">
-                        مستمر
-                    </span>
-
-                    <button
-                        class="favorite"
-                        aria-label="إضافة للمفضلة"
-                    >
-                        ♡
-                    </button>
-
-                </div>
-
-                <div class="manga-body">
-
-                    <h3>
-                        Omniscient Reader
-                    </h3>
-
-                    <div class="tags">
-                        <span>خيال</span>
-                        <span>أكشن</span>
-                    </div>
-
-                    <div class="chapter">
-
-                        <span>
-                            الفصل 184
-                        </span>
-
-                        <small>
-                            أمس
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- CARD 4 -->
-
-            <article
-                class="manga-card"
-                data-title="Lookism"
-                data-genres="دراما اكشن"
-            >
-
-                <div class="manga-cover">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1577083288073-40892c0860a4?auto=format&fit=crop&w=700&q=80"
-                        alt="Lookism"
-                    >
-
-                    <span class="status">
-                        مستمر
-                    </span>
-
-                    <button
-                        class="favorite"
-                        aria-label="إضافة للمفضلة"
-                    >
-                        ♡
-                    </button>
-
-                </div>
-
-                <div class="manga-body">
-
-                    <h3>
-                        Lookism
-                    </h3>
-
-                    <div class="tags">
-                        <span>دراما</span>
-                        <span>أكشن</span>
-                    </div>
-
-                    <div class="chapter">
-
-                        <span>
-                            الفصل 525
-                        </span>
-
-                        <small>
-                            قبل 3 أيام
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- CARD 5 -->
-
-            <article
-                class="manga-card"
-                data-title="Mercenary Enrollment"
-                data-genres="اكشن دراما"
-            >
-
-                <div class="manga-cover">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80"
-                        alt="Mercenary Enrollment"
-                    >
-
-                    <span class="status">
-                        مستمر
-                    </span>
-
-                    <button
-                        class="favorite"
-                        aria-label="إضافة للمفضلة"
-                    >
-                        ♡
-                    </button>
-
-                </div>
-
-                <div class="manga-body">
-
-                    <h3>
-                        Mercenary Enrollment
-                    </h3>
-
-                    <div class="tags">
-                        <span>أكشن</span>
-                        <span>دراما</span>
-                    </div>
-
-                    <div class="chapter">
-
-                        <span>
-                            الفصل 214
-                        </span>
-
-                        <small>
-                            قبل 4 أيام
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- CARD 6 -->
-
-            <article
-                class="manga-card"
-                data-title="The World After The Fall"
-                data-genres="اكشن خيال"
-            >
-
-                <div class="manga-cover">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=700&q=80"
-                        alt="The World After The Fall"
-                    >
-
-                    <span class="status completed">
-                        مكتمل
-                    </span>
-
-                    <button
-                        class="favorite"
-                        aria-label="إضافة للمفضلة"
-                    >
-                        ♡
-                    </button>
-
-                </div>
-
-                <div class="manga-body">
-
-                    <h3>
-                        The World After The Fall
-                    </h3>
-
-                    <div class="tags">
-                        <span>أكشن</span>
-                        <span>خيال</span>
-                    </div>
-
-                    <div class="chapter">
-
-                        <span>
-                            الفصل 120
-                        </span>
-
-                        <small>
-                            قبل أسبوع
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </article>
+            </div>
 
         </div>
 
+        <button class="luxury-btn" onclick="showScreen(4)">
+            <span>أول رسالة بيننا</span>
+            <i>↗</i>
+        </button>
 
-        <div class="no-results" id="noResults">
+    </div>
 
-            <div class="no-results-icon">
-                🔎
+</section>
+
+
+<!-- =========================
+     FIRST MESSAGE
+========================= -->
+
+<section class="screen" id="screen-4">
+
+    <div class="section-inner">
+
+        <div class="section-number">
+            <span>03</span>
+            <i></i>
+            <small>FIRST MESSAGE</small>
+        </div>
+
+        <h2>
+            أول شيء
+            <br>
+            <span>جمعنا.</span>
+        </h2>
+
+        <p class="description">
+            يمكن بالنسبة لأي شخص ثاني مجرد صورة،
+            لكن بالنسبة لي هي بداية قصة كاملة.
+        </p>
+
+        <div class="polaroid">
+
+            <div class="polaroid-top">
+                <span>OUR FIRST MESSAGE</span>
+                <span>♥</span>
             </div>
 
-            <h3>
-                لا توجد نتائج
-            </h3>
+            <div class="image-wrapper">
+                <img
+                    src="https://j.top4top.io/p_3882pxil50.jpg"
+                    alt="أول رسالة بيننا"
+                >
+            </div>
+
+            <div class="polaroid-caption">
+                <strong>ذكريات البداية.</strong>
+                <span>ريمـي × أنا</span>
+            </div>
+
+        </div>
+
+        <button class="luxury-btn" onclick="showScreen(5)">
+            <span>نكمل...</span>
+            <i>↗</i>
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     MEMORY 03
+========================= -->
+
+<section class="screen" id="screen-5">
+
+    <div class="section-inner">
+
+        <div class="section-number">
+            <span>04</span>
+            <i></i>
+            <small>GETTING CLOSER</small>
+        </div>
+
+        <h2>
+            من تعارف...
+            <br>
+            <span>إلى تعلق.</span>
+        </h2>
+
+        <div class="timeline">
+
+            <div class="timeline-item active">
+
+                <div class="timeline-point"></div>
+
+                <div class="timeline-card">
+                    <span>البداية</span>
+
+                    <h3>كنت مسوي نفسي ثقيل 😂</h3>
+
+                    <p>
+                        كنت أحاول أتصرف وكأني ما أهتم،
+                        لكن الحقيقة إني كنت مهتم أكثر
+                        مما كنت أبي أبين.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="timeline-item">
+
+                <div class="timeline-point"></div>
+
+                <div class="timeline-card">
+                    <span>بعدها</span>
+
+                    <h3>صرنا نتعرف أكثر</h3>
+
+                    <p>
+                        كلام أكثر، ضحك أكثر،
+                        تفاصيل أكثر،
+                        ومع كل يوم كنا نصير أقرب.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="timeline-item">
+
+                <div class="timeline-point"></div>
+
+                <div class="timeline-card">
+                    <span>ثم</span>
+
+                    <h3>تعلقنا ببعض</h3>
+
+                    <p>
+                        وصار وجودك شيء طبيعي في يومي،
+                        وصارت رسالتك قادرة تغير مزاجي
+                        بالكامل.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <button class="luxury-btn" onclick="showScreen(6)">
+            <span>الذكرى التالية</span>
+            <i>↗</i>
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     KAGAMI
+========================= -->
+
+<section class="screen" id="screen-6">
+
+    <div class="section-inner">
+
+        <div class="section-number">
+            <span>05</span>
+            <i></i>
+            <small>THE HARD PART</small>
+        </div>
+
+        <div class="sad-symbol">♡</div>
+
+        <h2>
+            حتى قصتنا...
+            <br>
+            <span>ما كانت سهلة.</span>
+        </h2>
+
+        <div class="glass-letter">
 
             <p>
-                لم نجد أي عمل مطابق لبحثك.
+                حاول يوسف، اللي كان اسمه كاغامي،
+                يخرب بينا ويفرقنا.
             </p>
 
+            <p>
+                وكانت ممكن الأمور تتغير،
+                وممكن القصة كلها تنتهي وقتها.
+            </p>
+
+            <p>
+                لكن انتي صديتيه،
+                وما خليتي أحد يدخل بيننا.
+            </p>
+
+            <div class="letter-divider"></div>
+
+            <p>
+                وبعدها كملنا مع بعض...
+                وعشنا أجمل سنة.
+            </p>
+
+            <div class="highlight-message">
+                <span>وأجمل شيء في هالسنة؟</span>
+                <strong>إنك كنتِ معي. ❤️</strong>
+            </div>
+
         </div>
+
+        <button class="luxury-btn" onclick="showScreen(7)">
+            <span>لكن...</span>
+            <i>↗</i>
+        </button>
 
     </div>
 
 </section>
 
 
-<!-- ================= POPULAR ================= -->
+<!-- =========================
+     BREAKUP
+========================= -->
 
-<section class="section popular" id="popular">
+<section class="screen breakup" id="screen-7">
 
-    <div class="container">
+    <div class="section-inner">
 
-        <div class="section-header">
+        <div class="section-number">
+            <span>06</span>
+            <i></i>
+            <small>THE DISTANCE</small>
+        </div>
 
-            <div>
-                <span class="section-label">
-                    TRENDING
-                </span>
+        <div class="broken">💔</div>
 
-                <h2>
-                    الأكثر قراءة
-                </h2>
+        <h2>
+            وهنا...
+            <br>
+            <span>أنا أخطأت.</span>
+        </h2>
+
+        <div class="glass-letter">
+
+            <p>
+                سويت شيء غبي دمر علاقتنا.
+            </p>
+
+            <p>
+                وأعرف إن اللي صار مو شيء بسيط،
+                وأعرف إن الكلام والاعتذار
+                ما يقدرون يرجعون الوقت للوراء.
+            </p>
+
+            <p>
+                وانفصلنا.
+            </p>
+
+            <div class="six-months">
+
+                <strong>06</strong>
+                <span>أشهر</span>
+
+            </div>
+
+            <p>
+                ستة أشهر مرت...
+                وكل واحد فينا عاش حياته،
+                لكن بعض الأشياء ما قدرت أنساها.
+            </p>
+
+            <div class="red-quote">
+                <span>“</span>
+                بعض الأشخاص مهما حاولت تتجاوزهم،
+                يبقى لهم مكان خاص في قلبك.
+                <span>”</span>
             </div>
 
         </div>
 
-
-        <div class="popular-grid">
-
-
-            <a href="#" class="popular-card">
-
-                <span class="popular-number">
-                    01
-                </span>
-
-                <img
-                    src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=300&q=80"
-                    alt=""
-                >
-
-                <div>
-                    <h3>
-                        Solo Leveling
-                    </h3>
-
-                    <p>
-                        1.2M قراءة
-                    </p>
-                </div>
-
-            </a>
-
-
-            <a href="#" class="popular-card">
-
-                <span class="popular-number">
-                    02
-                </span>
-
-                <img
-                    src="https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=300&q=80"
-                    alt=""
-                >
-
-                <div>
-                    <h3>
-                        The Beginning After The End
-                    </h3>
-
-                    <p>
-                        980K قراءة
-                    </p>
-                </div>
-
-            </a>
-
-
-            <a href="#" class="popular-card">
-
-                <span class="popular-number">
-                    03
-                </span>
-
-                <img
-                    src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=300&q=80"
-                    alt=""
-                >
-
-                <div>
-                    <h3>
-                        Omniscient Reader
-                    </h3>
-
-                    <p>
-                        740K قراءة
-                    </p>
-                </div>
-
-            </a>
-
-        </div>
+        <button class="luxury-btn" onclick="showScreen(8)">
+            <span>ثم رجعنا...</span>
+            <i>↗</i>
+        </button>
 
     </div>
 
 </section>
 
 
-<!-- ================= GENRES ================= -->
+<!-- =========================
+     RETURN
+========================= -->
 
-<section class="section genres-section" id="genres">
+<section class="screen" id="screen-8">
 
-    <div class="container">
+    <div class="section-inner">
 
-        <div class="section-header">
+        <div class="section-number">
+            <span>07</span>
+            <i></i>
+            <small>BACK TOGETHER</small>
+        </div>
 
-            <div>
-                <span class="section-label">
-                    EXPLORE
-                </span>
+        <div class="return-heart">
+            ♥
+        </div>
 
-                <h2>
-                    التصنيفات
-                </h2>
+        <h2>
+            وبعد نص سنة...
+            <br>
+            <span>رجعنا لبعض.</span>
+        </h2>
+
+        <div class="return-card">
+
+            <div class="return-top">
+                <span>SECOND CHANCE</span>
+                <b>♥</b>
+            </div>
+
+            <p>
+                يمكن الرجوع ما كان معناه إن كل شيء
+                صار مثالي فجأة.
+            </p>
+
+            <p>
+                كان فيه أشياء تحتاج وقت،
+                وأشياء تحتاج نفهمها،
+                وأخطاء تحتاج نتعلم منها.
+            </p>
+
+            <p>
+                لكن أهم شيء إننا رجعنا.
+            </p>
+
+            <p>
+                وأنا ما أبي أقول لك إني مستحيل أخطئ،
+                لأني أعرف نفسي وأعرف إني إنسان.
+            </p>
+
+            <div class="promise">
+                <span>لكن أقدر أقول لك:</span>
+
+                <strong>
+                    بحاول أكون أفضل.
+                    <br>
+                    وبحاول أحافظ عليك.
+                    <br>
+                    وبحاول ما أكرر أخطائي.
+                </strong>
             </div>
 
         </div>
 
+        <button class="luxury-btn" onclick="showScreen(9)">
+            <span>آخر شيء أبي أقوله...</span>
+            <i>↗</i>
+        </button>
 
-        <div class="genres">
+    </div>
 
-            <button class="genre active" data-filter="all">
-                الكل
-            </button>
+</section>
 
-            <button class="genre" data-filter="اكشن">
-                أكشن
-            </button>
 
-            <button class="genre" data-filter="رومانسي">
-                رومانسي
-            </button>
+<!-- =========================
+     FINAL
+========================= -->
 
-            <button class="genre" data-filter="دراما">
-                دراما
-            </button>
+<section class="screen final-screen" id="screen-9">
 
-            <button class="genre" data-filter="خيال">
-                خيال
-            </button>
+    <div class="final-aura"></div>
 
-            <button class="genre" data-filter="كوميدي">
-                كوميدي
-            </button>
+    <div class="final-heart">
+        ♥
+    </div>
 
+    <span class="final-label">
+        FROM MY HEART
+    </span>
+
+    <h2>
+        ريمي...
+        <br>
+        <span>يا قمري.</span>
+    </h2>
+
+    <div class="final-letter">
+
+        <p>
+            أدري سويت كثير أخطاء،
+            وللحين أسوي أخطاء.
+        </p>
+
+        <p>
+            وأدري إني مو كامل،
+            وأدري إن بيننا أشياء كثيرة
+            ما كانت سهلة.
+        </p>
+
+        <p>
+            لكن مهما صار،
+            ومهما اختلفنا،
+            ومهما مرت علينا أيام صعبة...
+        </p>
+
+        <p>
+            فيه شيء واحد ما تغير.
+        </p>
+
+        <div class="big-statement">
+            وجودك
+            <br>
+            <span>يعني لي كثير.</span>
+        </div>
+
+        <p>
+            أنا أكثر إنسان محظوظ بوجودك يا قمري.
+            وأتمنى مهما مرت الأيام،
+            تبقى بيننا أشياء جميلة
+            نسترجعها ونضحك عليها.
+        </p>
+
+        <p>
+            شكرًا لكل لحظة حلوة،
+            لكل ضحكة،
+            لكل كلام،
+            ولكل ذكرى صنعتيها معي.
+        </p>
+
+        <div class="love-text">
+            أحبك
+            <span>كثييييييييييييييييير</span>
+            ❤️
         </div>
 
     </div>
+
+    <div class="final-signature">
+        <span>♥</span>
+        من شخص يحبك
+        <span>♥</span>
+    </div>
+
+    <button class="restart" onclick="restart()">
+        ↻ نرجع لأول صفحة
+    </button>
 
 </section>
 
@@ -684,69 +691,7 @@
 </main>
 
 
-<!-- ================= FOOTER ================= -->
-
-<footer class="footer">
-
-    <div class="container footer-inner">
-
-        <div class="footer-brand">
-
-            <a href="#" class="logo">
-
-                <span class="logo-icon">
-                    N
-                </span>
-
-                <span>
-                    Noro<span>Hentai</span>
-                </span>
-
-            </a>
-
-            <p>
-                منصة مانجا بتصميم بسيط وسريع
-                لتستمتع بقراءة أعمالك المفضلة.
-            </p>
-
-        </div>
-
-
-        <div class="footer-links">
-
-            <a href="#home">
-                الرئيسية
-            </a>
-
-            <a href="#latest">
-                الأحدث
-            </a>
-
-            <a href="#popular">
-                الأكثر قراءة
-            </a>
-
-            <a href="#genres">
-                التصنيفات
-            </a>
-
-        </div>
-
-    </div>
-
-
-    <div class="copyright">
-
-        © 2026 NoroHentai
-        <span>•</span>
-        جميع الحقوق محفوظة
-
-    </div>
-
-</footer>
-
-
 <script src="script.js"></script>
 
 </body>
-    </html>
+</html>
