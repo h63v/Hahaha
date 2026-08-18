@@ -1,462 +1,299 @@
-/* =====================================================
-   NOROHENTAI
-   Main JavaScript
-===================================================== */
+let currentScreen = 1;
+
+const totalScreens = 9;
+
+const labels = [
+    "OUR STORY",
+    "QUESTION",
+    "THE BEGINNING",
+    "FIRST MESSAGE",
+    "GETTING CLOSER",
+    "THE HARD PART",
+    "THE DISTANCE",
+    "BACK TOGETHER",
+    "FROM MY HEART"
+];
 
 
-/* ================= ELEMENTS ================= */
+/* =========================
+   PRELOADER
+========================= */
 
-const searchButton =
-    document.getElementById("searchButton");
-
-const searchBox =
-    document.getElementById("searchBox");
-
-const searchInput =
-    document.getElementById("searchInput");
-
-const closeSearch =
-    document.getElementById("closeSearch");
-
-const menuButton =
-    document.getElementById("menuButton");
-
-const mobileMenu =
-    document.getElementById("mobileMenu");
-
-const mangaCards =
-    document.querySelectorAll(".manga-card");
-
-const favorites =
-    document.querySelectorAll(".favorite");
-
-const genres =
-    document.querySelectorAll(".genre");
-
-const noResults =
-    document.getElementById("noResults");
-
-
-/* ================= SEARCH OPEN ================= */
-
-searchButton.addEventListener("click", () => {
-
-    searchBox.classList.add("open");
+window.addEventListener("load", () => {
 
     setTimeout(() => {
-        searchInput.focus();
-    }, 200);
+
+        document
+            .getElementById("preloader")
+            .classList.add("hide");
+
+    }, 1800);
 
 });
 
 
-/* ================= SEARCH CLOSE ================= */
+/* =========================
+   تغيير الشاشة
+========================= */
 
-closeSearch.addEventListener("click", () => {
+function showScreen(number) {
 
-    closeSearchBox();
+    const current =
+        document.getElementById(`screen-${currentScreen}`);
 
-});
+    const next =
+        document.getElementById(`screen-${number}`);
 
+    if (!current || !next) return;
 
-function closeSearchBox() {
+    current.classList.remove("active");
 
-    searchBox.classList.remove("open");
+    setTimeout(() => {
 
-    searchInput.value = "";
+        next.classList.add("active");
 
-    showAllCards();
+        currentScreen = number;
 
-}
-
-
-/* ================= SEARCH ================= */
-
-searchInput.addEventListener("input", () => {
-
-    const value =
-        searchInput.value
-            .trim()
-            .toLowerCase();
-
-    if (!value) {
-
-        showAllCards();
-
-        return;
-    }
-
-
-    let count = 0;
-
-
-    mangaCards.forEach(card => {
-
-        const title =
-            card.dataset.title
-                .toLowerCase();
-
-        const cardGenres =
-            card.dataset.genres
-                .toLowerCase();
-
-
-        const found =
-            title.includes(value) ||
-            cardGenres.includes(value);
-
-
-        if (found) {
-
-            card.style.display = "";
-
-            count++;
-
-        } else {
-
-            card.style.display = "none";
-
-        }
-
-    });
-
-
-    updateResults(count);
-
-});
-
-
-/* ================= SHOW ALL ================= */
-
-function showAllCards() {
-
-    mangaCards.forEach(card => {
-
-        card.style.display = "";
-
-    });
-
-    noResults.classList.remove("show");
-
-}
-
-
-/* ================= RESULTS ================= */
-
-function updateResults(count) {
-
-    if (count === 0) {
-
-        noResults.classList.add("show");
-
-    } else {
-
-        noResults.classList.remove("show");
-
-    }
-
-}
-
-
-/* ================= MOBILE MENU ================= */
-
-menuButton.addEventListener("click", () => {
-
-    mobileMenu.classList.toggle("open");
-
-});
-
-
-document.querySelectorAll(".mobile-menu a")
-    .forEach(link => {
-
-        link.addEventListener("click", () => {
-
-            mobileMenu.classList.remove("open");
-
-        });
-
-    });
-
-
-/* ================= FAVORITES ================= */
-
-favorites.forEach(button => {
-
-    button.addEventListener("click", event => {
-
-        event.preventDefault();
-
-        event.stopPropagation();
-
-
-        button.classList.toggle("saved");
-
-
-        if (button.classList.contains("saved")) {
-
-            button.textContent = "♥";
-
-        } else {
-
-            button.textContent = "♡";
-
-        }
-
-    });
-
-});
-
-
-/* ================= GENRE FILTER ================= */
-
-genres.forEach(genre => {
-
-    genre.addEventListener("click", () => {
-
-        genres.forEach(item => {
-
-            item.classList.remove("active");
-
-        });
-
-
-        genre.classList.add("active");
-
-
-        const filter =
-            genre.dataset.filter
-                .toLowerCase();
-
-
-        if (filter === "all") {
-
-            showAllCards();
-
-            return;
-        }
-
-
-        let count = 0;
-
-
-        mangaCards.forEach(card => {
-
-            const cardGenres =
-                card.dataset.genres
-                    .toLowerCase();
-
-
-            if (cardGenres.includes(filter)) {
-
-                card.style.display = "";
-
-                count++;
-
-            } else {
-
-                card.style.display = "none";
-
-            }
-
-        });
-
-
-        updateResults(count);
-
-
-        document.getElementById("latest")
-            .scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-
-    });
-
-});
-
-
-/* ================= ESCAPE ================= */
-
-document.addEventListener("keydown", event => {
-
-    if (event.key === "Escape") {
-
-        closeSearchBox();
-
-        mobileMenu.classList.remove("open");
-
-    }
-
-});
-
-
-/* ================= CLOSE MENU OUTSIDE ================= */
-
-document.addEventListener("click", event => {
-
-    const clickedInsideMenu =
-        mobileMenu.contains(event.target);
-
-    const clickedButton =
-        menuButton.contains(event.target);
-
-
-    if (
-        !clickedInsideMenu &&
-        !clickedButton
-    ) {
-
-        mobileMenu.classList.remove("open");
-
-    }
-
-});
-
-
-/* ================= ACTIVE NAV ================= */
-
-const navLinks =
-    document.querySelectorAll(
-        ".desktop-nav a"
-    );
-
-
-const sections =
-    document.querySelectorAll(
-        "main section"
-    );
-
-
-window.addEventListener("scroll", () => {
-
-    let current = "";
-
-
-    sections.forEach(section => {
-
-        const sectionTop =
-            section.offsetTop - 120;
-
-        const sectionHeight =
-            section.offsetHeight;
-
-
-        if (
-            window.scrollY >= sectionTop &&
-            window.scrollY <
-                sectionTop + sectionHeight
-        ) {
-
-            current =
-                section.getAttribute("id");
-
-        }
-
-    });
-
-
-    navLinks.forEach(link => {
-
-        link.classList.remove("active");
-
-
-        if (
-            link.getAttribute("href") ===
-            "#" + current
-        ) {
-
-            link.classList.add("active");
-
-        }
-
-    });
-
-});
-
-
-/* ================= SMOOTH LINKS ================= */
-
-document.querySelectorAll(
-    'a[href^="#"]'
-).forEach(link => {
-
-    link.addEventListener("click", event => {
-
-        const id =
-            link.getAttribute("href");
-
-
-        if (
-            !id ||
-            id === "#"
-        ) {
-
-            return;
-
-        }
-
-
-        const target =
-            document.querySelector(id);
-
-
-        if (!target) {
-
-            return;
-
-        }
-
-
-        event.preventDefault();
-
-
-        const headerHeight = 70;
-
-
-        const position =
-            target.offsetTop -
-            headerHeight;
-
+        updateUI();
 
         window.scrollTo({
-
-            top: position,
-
+            top: 0,
             behavior: "smooth"
-
         });
 
-    });
+        if (number === 9) {
+            celebration();
+        }
 
-});
-
-
-/* ================= HEADER SHADOW ================= */
-
-const header =
-    document.querySelector(".header");
+    }, 120);
+}
 
 
-window.addEventListener("scroll", () => {
+/* =========================
+   تحديث العداد
+========================= */
 
-    if (window.scrollY > 20) {
+function updateUI() {
 
-        header.style.boxShadow =
-            "0 10px 35px rgba(0,0,0,.25)";
+    const number =
+        String(currentScreen).padStart(2, "0");
 
-    } else {
+    document
+        .getElementById("currentNumber")
+        .textContent = number;
 
-        header.style.boxShadow =
-            "none";
+    document
+        .getElementById("memoryLabel")
+        .textContent = labels[currentScreen - 1];
+}
+
+
+/* =========================
+   زر لا 😂
+========================= */
+
+const noButton =
+    document.getElementById("noButton");
+
+if (noButton) {
+
+    const messages = [
+        "متأكدة؟ 😭",
+        "فكري مرة ثانية 😂",
+        "لا مو هذي الإجابة",
+        "جربي الزر الثاني ❤️",
+        "لاااا 😭",
+        "غلط 😂"
+    ];
+
+    function escapeNo() {
+
+        const width =
+            noButton.offsetWidth;
+
+        const height =
+            noButton.offsetHeight;
+
+        const maxX =
+            window.innerWidth - width - 15;
+
+        const maxY =
+            window.innerHeight - height - 15;
+
+        const x =
+            Math.max(10, Math.random() * maxX);
+
+        const y =
+            Math.max(80, Math.random() * maxY);
+
+        noButton.style.position = "fixed";
+        noButton.style.left = `${x}px`;
+        noButton.style.top = `${y}px`;
+
+        noButton.textContent =
+            messages[
+                Math.floor(
+                    Math.random() * messages.length
+                )
+            ];
+
+        noButton.style.zIndex = "500";
+    }
+
+    noButton.addEventListener(
+        "mouseenter",
+        escapeNo
+    );
+
+    noButton.addEventListener(
+        "touchstart",
+        function(e) {
+
+            e.preventDefault();
+
+            escapeNo();
+
+        }
+    );
+
+    noButton.addEventListener(
+        "click",
+        escapeNo
+    );
+}
+
+
+/* =========================
+   قلوب متحركة
+========================= */
+
+const symbols = [
+    "♥",
+    "♡",
+    "❤",
+    "💗",
+    "💖"
+];
+
+function createHeart() {
+
+    const heart =
+        document.createElement("div");
+
+    heart.className =
+        "floating-heart";
+
+    heart.textContent =
+        symbols[
+            Math.floor(
+                Math.random() * symbols.length
+            )
+        ];
+
+    heart.style.left =
+        Math.random() * 100 + "vw";
+
+    heart.style.fontSize =
+        (9 + Math.random() * 20) + "px";
+
+    heart.style.animationDuration =
+        (6 + Math.random() * 8) + "s";
+
+    heart.style.setProperty(
+        "--move",
+        ((Math.random() - .5) * 300) + "px"
+    );
+
+    document
+        .getElementById("particles")
+        .appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 15000);
+}
+
+
+setInterval(createHeart, 650);
+
+
+/* =========================
+   احتفال النهاية
+========================= */
+
+function celebration() {
+
+    for (let i = 0; i < 35; i++) {
+
+        setTimeout(() => {
+            createHeart();
+        }, i * 100);
 
     }
 
-});
+}
 
 
-/* ================= INIT ================= */
+/* =========================
+   البداية
+========================= */
 
-console.log(
-    "NoroHentai — Ready."
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        updateUI();
+
+        for (let i = 0; i < 8; i++) {
+
+            setTimeout(() => {
+                createHeart();
+            }, i * 250);
+
+        }
+
+    }
 );
+
+
+/* =========================
+   إعادة البداية
+========================= */
+
+function restart() {
+
+    const current =
+        document.querySelector(".screen.active");
+
+    if (current) {
+        current.classList.remove("active");
+    }
+
+    currentScreen = 1;
+
+    document
+        .getElementById("screen-1")
+        .classList.add("active");
+
+    updateUI();
+
+    const no =
+        document.getElementById("noButton");
+
+    if (no) {
+
+        no.style.position = "";
+        no.style.left = "";
+        no.style.top = "";
+        no.style.zIndex = "";
+
+        no.textContent = "لا 💔";
+
+    }
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
